@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 
 // Replace with your real Formspree form ID (https://formspree.io) — e.g. "xyzabcde"
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/your-form-id";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
