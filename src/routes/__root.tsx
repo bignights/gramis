@@ -77,16 +77,29 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Gramis" },
-      { name: "description", content: "The Future Of Social Media" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Gramis" },
-      { property: "og:description", content: "The Future Of Social Media" },
+      { title: "Gramis — AI-Powered Social Media Management" },
+      {
+        name: "description",
+        content:
+          "Gramis is the AI-powered social media management platform for serious creators — schedule, publish, and grow across every channel from one premium workspace.",
+      },
+      { name: "author", content: "Gramis" },
+      { property: "og:site_name", content: "Gramis" },
+      { property: "og:title", content: "Gramis — AI-Powered Social Media Management" },
+      {
+        property: "og:description",
+        content:
+          "The AI-powered social media management platform for serious creators. Schedule, publish, and grow across every channel from one premium workspace.",
+      },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
+      { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "Gramis" },
-      { name: "twitter:description", content: "The Future Of Social Media" },
+      { name: "twitter:title", content: "Gramis — AI-Powered Social Media Management" },
+      {
+        name: "twitter:description",
+        content:
+          "The AI-powered social media management platform for serious creators. Join the private waitlist.",
+      },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp" },
     ],
@@ -94,6 +107,28 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         rel: "stylesheet",
         href: appCss,
+      },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          name: "Gramis",
+          url: "https://gramis.lovable.app",
+          description:
+            "AI-powered social media management platform for serious creators.",
+        }),
+      },
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          name: "Gramis",
+          url: "https://gramis.lovable.app",
+        }),
       },
     ],
   }),
