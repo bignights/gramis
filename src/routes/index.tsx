@@ -193,6 +193,7 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
         <div className="relative flex-1">
           <input
             type="email"
+            aria-label="Email address"
             required
             placeholder="you@domain.com"
             value={email}
