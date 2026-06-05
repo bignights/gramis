@@ -19,18 +19,22 @@ const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Gramis — One platform. Every audience." },
+      { title: "Gramis — AI-Powered Social Media Management" },
       {
         name: "description",
         content:
-          "Gramis is the AI-powered social media platform for serious creators. Join the private waitlist.",
+          "Gramis is the AI-powered social media management platform for serious creators. Join the private waitlist for early access.",
       },
-      { property: "og:title", content: "Gramis — One platform. Every audience." },
+      { property: "og:title", content: "Gramis — AI-Powered Social Media Management" },
       {
         property: "og:description",
         content:
-          "AI-powered social media management for serious creators. Join the private waitlist.",
+          "AI-powered social media management for serious creators. Join the private waitlist for early access.",
       },
+      { property: "og:url", content: "https://gramis.lovable.app/" },
+    ],
+    links: [
+      { rel: "canonical", href: "https://gramis.lovable.app/" },
     ],
   }),
   component: Index,
