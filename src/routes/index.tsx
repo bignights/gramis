@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import {
   Zap,
@@ -530,6 +530,12 @@ function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
         <Logo className="text-base text-white" />
         <div>© 2026 Gramis. Built for serious creators.</div>
+        <Link
+          to="/guides/best-times-to-post"
+          className="text-white/70 transition hover:text-[#c4b5fd]"
+        >
+          Guides
+        </Link>
       </div>
     </footer>
   );
