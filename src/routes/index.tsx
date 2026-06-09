@@ -114,7 +114,7 @@ function Logo({
   showText?: boolean;
 }) {
   return (
-    <span className={`inline-flex items-center gap-2 font-semibold tracking-tight ${className}`}>
+    <span className={`inline-flex items-center gap-3 font-semibold tracking-tight ${className}`}>
       <img
         src={gramisLogo.url}
         alt="Gramis logo"
