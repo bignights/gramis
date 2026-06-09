@@ -528,6 +528,11 @@ function Tiers() {
             )}
 
             <button
+              type="button"
+              onClick={() => {
+                document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                setTimeout(() => document.getElementById("email")?.focus({ preventScroll: true }), 600);
+              }}
               className={`mt-6 h-11 rounded-xl text-sm font-semibold transition ${
                 t.highlight
                   ? "bg-[#c4b5fd] text-[#080808] hover:bg-white"
