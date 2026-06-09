@@ -104,15 +104,27 @@ function Reveal({ children }: { children: React.ReactNode }) {
 /* ---------------------------------- UI ----------------------------------- */
 import gramisLogo from "@/assets/gramis-logo.png.asset.json";
 
-function Logo({ className = "" }: { className?: string }) {
+function Logo({
+  className = "",
+  iconSize = "h-9 w-9",
+  showText = true,
+}: {
+  className?: string;
+  iconSize?: string;
+  showText?: boolean;
+}) {
   return (
     <span className={`inline-flex items-center gap-2 font-semibold tracking-tight ${className}`}>
       <img
         src={gramisLogo.url}
         alt="Gramis logo"
-        className="h-7 w-7 object-contain"
+        className={`${iconSize} object-contain`}
       />
-      Gram<span className="text-gradient-purple">is</span>
+      {showText && (
+        <span>
+          Gram<span className="text-gradient-purple">is</span>
+        </span>
+      )}
     </span>
   );
 }
