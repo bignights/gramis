@@ -102,9 +102,16 @@ function Reveal({ children }: { children: React.ReactNode }) {
 }
 
 /* ---------------------------------- UI ----------------------------------- */
+import gramisLogo from "@/assets/gramis-logo.png.asset.json";
+
 function Logo({ className = "" }: { className?: string }) {
   return (
-    <span className={`font-semibold tracking-tight ${className}`}>
+    <span className={`inline-flex items-center gap-2 font-semibold tracking-tight ${className}`}>
+      <img
+        src={gramisLogo.url}
+        alt="Gramis logo"
+        className="h-7 w-7 object-contain"
+      />
       Gram<span className="text-gradient-purple">is</span>
     </span>
   );
