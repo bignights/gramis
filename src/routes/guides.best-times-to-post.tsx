@@ -76,8 +76,8 @@ function BestTimesGuide() {
       <div className="relative">
         <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-md bg-[#080808]/70">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-            <Link to="/" className="inline-flex items-center gap-2 font-semibold tracking-tight text-2xl">
-              <img src={gramisLogo.url} alt="Gramis logo" className="h-10 w-10 object-contain" />
+            <Link to="/" className="inline-flex items-center gap-3 font-semibold tracking-tight text-3xl">
+              <img src={gramisLogo.url} alt="Gramis logo" className="h-14 w-14 object-contain" />
               <span>Gram<span className="text-gradient-purple">is</span></span>
             </Link>
             <div className="inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/20 bg-[#c4b5fd]/[0.06] px-3 py-1.5 text-xs">
@@ -264,7 +264,7 @@ function BestTimesGuide() {
         <footer className="border-t border-white/[0.06]">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
             <span className="inline-flex items-center">
-              <img src={gramisLogo.url} alt="Gramis logo" className="h-10 w-10 object-contain" />
+              <img src={gramisLogo.url} alt="Gramis logo" className="h-14 w-14 object-contain" />
             </span>
             <div>© 2026 Gramis. Built for serious creators.</div>
             <Link

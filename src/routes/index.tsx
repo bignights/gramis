@@ -106,7 +106,7 @@ import gramisLogo from "@/assets/gramis-logo.png.asset.json";
 
 function Logo({
   className = "",
-  iconSize = "h-9 w-9",
+  iconSize = "h-14 w-14",
   showText = true,
 }: {
   className?: string;
@@ -114,7 +114,7 @@ function Logo({
   showText?: boolean;
 }) {
   return (
-    <span className={`inline-flex items-center gap-2 font-semibold tracking-tight ${className}`}>
+    <span className={`inline-flex items-center gap-3 font-semibold tracking-tight ${className}`}>
       <img
         src={gramisLogo.url}
         alt="Gramis logo"
@@ -132,8 +132,8 @@ function Logo({
 function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-md bg-[#080808]/70">
-      <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Logo className="text-2xl" iconSize="h-10 w-10" />
+      <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
+        <Logo className="text-3xl" iconSize="h-14 w-14" />
         <div className="inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/20 bg-[#c4b5fd]/[0.06] px-3 py-1.5 text-xs">
           <span className="h-1.5 w-1.5 rounded-full bg-[#c4b5fd] shadow-[0_0_8px_#c4b5fd]" />
           <span className="text-white/80">Private Waitlist</span>
@@ -177,7 +177,7 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <section className="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center md:pt-32 md:pb-28">
+    <section id="join" className="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center md:pt-32 md:pb-28">
       <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/60">
         The future of social media
       </div>
@@ -199,6 +199,7 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
       >
         <div className="relative flex-1">
           <input
+            id="email"
             type="email"
             aria-label="Email address"
             required
@@ -527,6 +528,11 @@ function Tiers() {
             )}
 
             <button
+              type="button"
+              onClick={() => {
+                document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+                setTimeout(() => document.getElementById("email")?.focus({ preventScroll: true }), 600);
+              }}
               className={`mt-6 h-11 rounded-xl text-sm font-semibold transition ${
                 t.highlight
                   ? "bg-[#c4b5fd] text-[#080808] hover:bg-white"
@@ -547,7 +553,7 @@ function Footer() {
   return (
     <footer className="border-t border-white/[0.06]">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
-        <Logo iconSize="h-10 w-10" showText={false} />
+        <Logo iconSize="h-14 w-14" showText={false} />
         <div>© 2026 Gramis. Built for serious creators.</div>
         <Link
           to="/guides/best-times-to-post"
