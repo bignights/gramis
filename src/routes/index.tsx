@@ -547,7 +547,7 @@ function Footer() {
   return (
     <footer className="border-t border-white/[0.06]">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
-        <Logo iconSize="h-10 w-10" showText={false} />
+        <Logo iconSize="h-14 w-14" showText={false} />
         <div>© 2026 Gramis. Built for serious creators.</div>
         <Link
           to="/guides/best-times-to-post"
