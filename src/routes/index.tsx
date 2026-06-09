@@ -133,7 +133,7 @@ function Navbar() {
   return (
     <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-md bg-[#080808]/70">
       <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-        <Logo className="text-xl" />
+        <Logo className="text-2xl" iconSize="h-10 w-10" />
         <div className="inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/20 bg-[#c4b5fd]/[0.06] px-3 py-1.5 text-xs">
           <span className="h-1.5 w-1.5 rounded-full bg-[#c4b5fd] shadow-[0_0_8px_#c4b5fd]" />
           <span className="text-white/80">Private Waitlist</span>
@@ -547,7 +547,7 @@ function Footer() {
   return (
     <footer className="border-t border-white/[0.06]">
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
-        <Logo className="text-base text-white" />
+        <Logo iconSize="h-10 w-10" showText={false} />
         <div>© 2026 Gramis. Built for serious creators.</div>
         <Link
           to="/guides/best-times-to-post"
