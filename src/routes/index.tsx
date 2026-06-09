@@ -177,7 +177,7 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
   }
 
   return (
-    <section className="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center md:pt-32 md:pb-28">
+    <section id="join" className="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center md:pt-32 md:pb-28">
       <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/60">
         The future of social media
       </div>
