@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Clock, Calendar, Sparkles, ArrowRight, Instagram, Music2 } from "lucide-react";
+import gramisLogo from "@/assets/gramis-logo.png.asset.json";
 
 export const Route = createFileRoute("/guides/best-times-to-post")({
   head: () => ({
@@ -75,7 +76,8 @@ function BestTimesGuide() {
       <div className="relative">
         <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-md bg-[#080808]/70">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-            <Link to="/" className="font-semibold tracking-tight text-xl">
+            <Link to="/" className="inline-flex items-center gap-2 font-semibold tracking-tight text-xl">
+              <img src={gramisLogo.url} alt="Gramis logo" className="h-7 w-7 object-contain" />
               Gram<span className="text-gradient-purple">is</span>
             </Link>
             <div className="inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/20 bg-[#c4b5fd]/[0.06] px-3 py-1.5 text-xs">
@@ -261,7 +263,8 @@ function BestTimesGuide() {
         {/* Footer */}
         <footer className="border-t border-white/[0.06]">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
-            <span className="font-semibold tracking-tight text-base text-white">
+            <span className="inline-flex items-center gap-2 font-semibold tracking-tight text-base text-white">
+              <img src={gramisLogo.url} alt="Gramis logo" className="h-6 w-6 object-contain" />
               Gram<span className="text-gradient-purple">is</span>
             </span>
             <div>© 2026 Gramis. Built for serious creators.</div>
