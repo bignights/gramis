@@ -106,7 +106,7 @@ import gramisLogo from "@/assets/gramis-logo.png.asset.json";
 
 function Logo({
   className = "",
-  iconSize = "h-9 w-9",
+  iconSize = "h-14 w-14",
   showText = true,
 }: {
   className?: string;
