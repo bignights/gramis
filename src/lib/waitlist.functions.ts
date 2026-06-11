@@ -15,7 +15,8 @@ export type Tier = "founder" | "priority" | "early_adopter";
 const emailSchema = z.string().trim().toLowerCase().email().max(254);
 
 export const getWaitlistStats = createServerFn({ method: "GET" }).handler(async () => {
-  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const { supabaseAdmin: client } = await import("@/integrations/supabase/client.server");
+  const supabaseAdmin = client as any;
   const counts: Record<Tier, number> = { founder: 0, priority: 0, early_adopter: 0 };
   for (const tier of Object.keys(counts) as Tier[]) {
     const { count } = await supabaseAdmin
