@@ -41,7 +41,8 @@ export const joinWaitlist = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin: client } = await import("@/integrations/supabase/client.server");
+    const supabaseAdmin = client as any;
 
     // Already joined?
     const { data: existing } = await supabaseAdmin
