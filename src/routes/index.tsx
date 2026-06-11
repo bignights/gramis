@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import {
   Zap,
   ArrowRight,
@@ -12,58 +13,93 @@ import {
   ChevronDown,
   Check,
 } from "lucide-react";
-
-// Replace with your real Formspree form ID (https://formspree.io) — e.g. "xyzabcde"
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
+import {
+  joinWaitlist,
+  getWaitlistStats,
+  TIER_CAPS,
+  type Tier,
+} from "@/lib/waitlist.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [
-      { property: "og:url", content: "https://gramis.lovable.app/" },
-    ],
-    links: [
-      { rel: "canonical", href: "https://gramis.lovable.app/" },
-    ],
+    meta: [{ property: "og:url", content: "https://gramis.lovable.app/" }],
+    links: [{ rel: "canonical", href: "https://gramis.lovable.app/" }],
   }),
   component: Index,
 });
 
-const WAITLIST_COUNT = 31;
-const FOUNDER_CAP = 100;
-const FOUNDER_REMAINING = FOUNDER_CAP - WAITLIST_COUNT; // 69
+const BASELINE_OFFSET = 31; // fake-baseline so early visitors don't see "0 on waitlist"
+
+type Stats = { founder: number; priority: number; earlyAdopter: number; total: number };
 
 function Index() {
-  const [submitted, setSubmitted] = useState(false);
+  const [submitted, setSubmitted] = useState<null | { tier: Tier; already: boolean }>(null);
+  const [stats, setStats] = useState<Stats>({
+    founder: 0,
+    priority: 0,
+    earlyAdopter: 0,
+    total: 0,
+  });
+  const fetchStats = useServerFn(getWaitlistStats);
+
+  useEffect(() => {
+    fetchStats().then((s) => setStats(s)).catch(() => {});
+  }, [fetchStats]);
+
+  const refreshStats = () => fetchStats().then((s) => setStats(s)).catch(() => {});
+
+  const tierFull = {
+    founder: stats.founder >= TIER_CAPS.founder,
+    priority: stats.priority >= TIER_CAPS.priority,
+    early_adopter: stats.earlyAdopter >= TIER_CAPS.early_adopter,
+  };
+  const allClosed = tierFull.founder && tierFull.priority && tierFull.early_adopter;
 
   return (
-    <div
-      className="relative min-h-screen overflow-hidden"
-      style={{ backgroundColor: "#080808" }}
-    >
+    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: "#080808" }}>
       <div className="pointer-events-none absolute inset-0 bg-noise opacity-[0.6]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[600px] purple-glow" />
 
       <div className="relative">
         <Navbar />
         <main>
-          <Hero onSuccess={() => setSubmitted(true)} />
+          <Hero
+            onSuccess={(tier, already) => {
+              setSubmitted({ tier, already });
+              refreshStats();
+            }}
+            allClosed={allClosed}
+          />
           <Reveal>
-            <Counter />
+            <Counter total={stats.total} />
           </Reveal>
           <Reveal>
-            <Scarcity />
+            <Scarcity founderCount={stats.founder} />
           </Reveal>
           <Reveal>
             <Features />
           </Reveal>
           <Reveal>
-            <Tiers />
+            <Tiers
+              tierFull={tierFull}
+              onSuccess={(tier, already) => {
+                setSubmitted({ tier, already });
+                refreshStats();
+              }}
+              allClosed={allClosed}
+            />
           </Reveal>
         </main>
         <Footer />
       </div>
 
-      {submitted && <SuccessOverlay onClose={() => setSubmitted(false)} />}
+      {submitted && (
+        <SuccessOverlay
+          tier={submitted.tier}
+          already={submitted.already}
+          onClose={() => setSubmitted(null)}
+        />
+      )}
     </div>
   );
 }
@@ -115,11 +151,7 @@ function Logo({
 }) {
   return (
     <span className={`inline-flex items-center gap-3 font-semibold tracking-tight ${className}`}>
-      <img
-        src={gramisLogo.url}
-        alt="Gramis logo"
-        className={`${iconSize} object-contain`}
-      />
+      <img src={gramisLogo.url} alt="Gramis logo" className={`${iconSize} object-contain`} />
       {showText && (
         <span>
           Gram<span className="text-gradient-purple">is</span>
@@ -144,11 +176,18 @@ function Navbar() {
 }
 
 /* ---------------------------------- Hero --------------------------------- */
-function Hero({ onSuccess }: { onSuccess: () => void }) {
+function Hero({
+  onSuccess,
+  allClosed,
+}: {
+  onSuccess: (tier: Tier, already: boolean) => void;
+  allClosed: boolean;
+}) {
   const [email, setEmail] = useState("");
   const [touched, setTouched] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const join = useServerFn(joinWaitlist);
 
   const valid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
   const showError = touched && email.length > 0 && !valid;
@@ -156,19 +195,17 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setTouched(true);
-    if (!valid) return;
+    if (!valid || allClosed) return;
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(FORMSPREE_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify({ email: email.trim() }),
-      });
-      if (!res.ok && !FORMSPREE_ENDPOINT.includes("your-form-id")) {
-        throw new Error("Submission failed");
+      const result = await join({ data: { email: email.trim(), sourceButton: "hero" } });
+      if (result.status === "closed") {
+        setError("The waitlist is full. Thank you!");
+      } else {
+        onSuccess(result.tier as Tier, result.status === "already_joined");
+        setEmail("");
       }
-      onSuccess();
     } catch {
       setError("Something went wrong. Try again.");
     } finally {
@@ -208,7 +245,8 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
             onChange={(e) => setEmail(e.target.value)}
             onBlur={() => setTouched(true)}
             aria-invalid={showError}
-            className={`h-12 w-full rounded-xl border bg-white/[0.04] px-4 pr-10 text-sm text-white placeholder:text-white/30 outline-none transition focus:bg-white/[0.06] focus:ring-2 ${
+            disabled={allClosed}
+            className={`h-12 w-full rounded-xl border bg-white/[0.04] px-4 pr-10 text-sm text-white placeholder:text-white/30 outline-none transition focus:bg-white/[0.06] focus:ring-2 disabled:opacity-50 ${
               showError
                 ? "border-red-400/40 focus:border-red-400/60 focus:ring-red-400/20"
                 : "border-white/10 focus:border-[#c4b5fd]/40 focus:ring-[#c4b5fd]/20"
@@ -220,10 +258,10 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
         </div>
         <button
           type="submit"
-          disabled={loading}
-          className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#c4b5fd] px-6 text-sm font-semibold text-[#080808] shadow-[0_8px_30px_-8px_rgba(196,181,253,0.6)] transition hover:bg-white hover:shadow-[0_8px_30px_-4px_rgba(196,181,253,0.8)] disabled:opacity-70"
+          disabled={loading || allClosed}
+          className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#c4b5fd] px-6 text-sm font-semibold text-[#080808] shadow-[0_8px_30px_-8px_rgba(196,181,253,0.6)] transition hover:bg-white hover:shadow-[0_8px_30px_-4px_rgba(196,181,253,0.8)] disabled:opacity-60"
         >
-          {loading ? "Joining…" : "Get Early Access"}
+          {loading ? "Joining…" : allClosed ? "Waitlist closed" : "Get Early Access"}
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </button>
       </form>
@@ -243,7 +281,15 @@ function Hero({ onSuccess }: { onSuccess: () => void }) {
 }
 
 /* --------------------------- Success overlay ----------------------------- */
-function SuccessOverlay({ onClose }: { onClose: () => void }) {
+function SuccessOverlay({
+  tier,
+  already,
+  onClose,
+}: {
+  tier: Tier;
+  already: boolean;
+  onClose: () => void;
+}) {
   useEffect(() => {
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -255,13 +301,21 @@ function SuccessOverlay({ onClose }: { onClose: () => void }) {
     };
   }, [onClose]);
 
+  const tierLabel =
+    tier === "founder"
+      ? "Founder Access"
+      : tier === "priority"
+        ? "Priority Access"
+        : "Early Adopter";
+
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center px-6"
       style={{ backgroundColor: "#080808", animation: "fade-in 400ms ease-out both" }}
     >
       <div className="pointer-events-none absolute inset-0 bg-noise opacity-[0.6]" />
-      <div className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full"
+      <div
+        className="pointer-events-none absolute left-1/2 top-1/2 h-[700px] w-[700px] -translate-x-1/2 -translate-y-1/2 rounded-full"
         style={{
           background:
             "radial-gradient(closest-side, rgba(196,181,253,0.28), rgba(196,181,253,0) 70%)",
@@ -275,11 +329,14 @@ function SuccessOverlay({ onClose }: { onClose: () => void }) {
           <Check className="h-6 w-6 text-[#c4b5fd]" />
         </div>
         <h2 className="text-6xl font-semibold tracking-[-0.04em] text-white md:text-8xl">
-          You're <span className="text-gradient-purple">in.</span>
+          {already ? "Already" : "You're"} <span className="text-gradient-purple">in.</span>
         </h2>
         <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-white/70 md:text-lg">
-          Welcome to Gramis. You're one of the first people to believe in something big. We'll be
-          in touch soon.
+          {already
+            ? `You're already on the list — ${tierLabel} secured.`
+            : tier === "founder"
+              ? "Welcome to Gramis. You're a Founder — locked-in pricing forever, direct line to the team."
+              : `Welcome to Gramis. You're on the ${tierLabel} list.`}
         </p>
         <p className="mt-6 text-xs uppercase tracking-[0.22em] text-[#c4b5fd]/80">
           Check your email — something is coming.
@@ -296,9 +353,9 @@ function SuccessOverlay({ onClose }: { onClose: () => void }) {
 }
 
 /* -------------------------------- Counter -------------------------------- */
-function Counter() {
+function Counter({ total }: { total: number }) {
   const stats = [
-    { v: String(WAITLIST_COUNT), l: "On Waitlist" },
+    { v: String(BASELINE_OFFSET + total), l: "On Waitlist" },
     { v: "6", l: "Platforms" },
     { v: "∞", l: "Reach" },
   ];
@@ -319,27 +376,36 @@ function Counter() {
 }
 
 /* -------------------------------- Scarcity ------------------------------- */
-function Scarcity() {
+function Scarcity({ founderCount }: { founderCount: number }) {
+  const remaining = Math.max(0, TIER_CAPS.founder - BASELINE_OFFSET - founderCount);
+  const closed = founderCount >= TIER_CAPS.founder;
   return (
     <section className="mx-auto max-w-5xl px-6 pb-24">
-      <div className="card-hairline relative flex flex-col items-start justify-between gap-6 rounded-2xl p-6 md:flex-row md:items-center md:p-8">
+      <div
+        className={`card-hairline relative flex flex-col items-start justify-between gap-6 rounded-2xl p-6 md:flex-row md:items-center md:p-8 ${closed ? "opacity-70" : ""}`}
+      >
         <div className="flex items-start gap-4">
           <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#c4b5fd]/30 bg-[#c4b5fd]/10">
             <Zap className="h-5 w-5 text-[#c4b5fd]" />
           </div>
           <div>
             <div className="text-lg font-semibold tracking-tight">
-              First 100 get Founder Access — forever.
+              {closed
+                ? "Founder Access — closed forever ✓"
+                : "First 100 get Founder Access — forever."}
             </div>
             <p className="mt-1 max-w-xl text-sm text-white/55">
-              Locked-in pricing, direct line to the team, and your name on our early believers
-              page. Closes permanently at 100.
+              {closed
+                ? "All 100 Founder spots are taken. Join Priority Access below for the next-best perks."
+                : "Locked-in pricing, direct line to the team, and your name on our early believers page. Closes permanently at 100."}
             </p>
           </div>
         </div>
-        <div className="shrink-0 rounded-full border border-[#c4b5fd]/30 bg-[#c4b5fd]/10 px-4 py-2 text-sm font-medium text-[#c4b5fd]">
-          {FOUNDER_REMAINING} Founder spots remaining
-        </div>
+        {!closed && (
+          <div className="shrink-0 rounded-full border border-[#c4b5fd]/30 bg-[#c4b5fd]/10 px-4 py-2 text-sm font-medium text-[#c4b5fd]">
+            {remaining} Founder spots remaining
+          </div>
+        )}
       </div>
     </section>
   );
@@ -348,42 +414,12 @@ function Scarcity() {
 /* -------------------------------- Features ------------------------------- */
 function Features() {
   const features = [
-    {
-      n: "01",
-      t: "Cross-platform distribution",
-      d: "Publish once. Land natively on every platform with the right format, ratio, and caption.",
-      icon: Share2,
-    },
-    {
-      n: "02",
-      t: "AI caption engine",
-      d: "Captions trained on your voice, your audience, and what's converting right now.",
-      icon: Sparkles,
-    },
-    {
-      n: "03",
-      t: "Smart scheduling",
-      d: "Posts go live the exact moment your audience is most active — no guesswork.",
-      icon: Clock,
-    },
-    {
-      n: "04",
-      t: "Trending sound discovery",
-      d: "Surface sounds before they peak. Get on the wave, not behind it.",
-      icon: Music2,
-    },
-    {
-      n: "05",
-      t: "Watermark removal",
-      d: "Repurpose any clip cleanly across platforms without leaving traces.",
-      icon: Eraser,
-    },
-    {
-      n: "06",
-      t: "Analytics dashboard",
-      d: "Every metric that matters in one place. Track growth, not vanity.",
-      icon: BarChart3,
-    },
+    { n: "01", t: "Cross-platform distribution", d: "Publish once. Land natively on every platform with the right format, ratio, and caption.", icon: Share2 },
+    { n: "02", t: "AI caption engine", d: "Captions trained on your voice, your audience, and what's converting right now.", icon: Sparkles },
+    { n: "03", t: "Smart scheduling", d: "Posts go live the exact moment your audience is most active — no guesswork.", icon: Clock },
+    { n: "04", t: "Trending sound discovery", d: "Surface sounds before they peak. Get on the wave, not behind it.", icon: Music2 },
+    { n: "05", t: "Watermark removal", d: "Repurpose any clip cleanly across platforms without leaving traces.", icon: Eraser },
+    { n: "06", t: "Analytics dashboard", d: "Every metric that matters in one place. Track growth, not vanity.", icon: BarChart3 },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 pb-28">
@@ -415,22 +451,36 @@ function Features() {
 }
 
 /* --------------------------------- Tiers --------------------------------- */
-function Tiers() {
-  const tiers = [
+function Tiers({
+  tierFull,
+  onSuccess,
+  allClosed,
+}: {
+  tierFull: Record<Tier, boolean>;
+  onSuccess: (tier: Tier, already: boolean) => void;
+  allClosed: boolean;
+}) {
+  const tiers: Array<{
+    name: string;
+    tag: string;
+    spots: string;
+    perks: string[];
+    tier: Tier;
+    featured?: boolean;
+    highlight?: boolean;
+  }> = [
     {
       name: "Early Adopter",
       tag: "Tier 3",
       spots: "Spots 301–1000",
-      perks: [
-        "Beta access before public launch",
-        "30% off first 3 months",
-        "Founding member badge",
-      ],
+      tier: "early_adopter",
+      perks: ["Beta access before public launch", "30% off first 3 months", "Founding member badge"],
     },
     {
       name: "Priority Access",
       tag: "Tier 2",
       spots: "Spots 101–300",
+      tier: "priority",
       perks: [
         "First wave of beta invites",
         "50% off for first 6 months",
@@ -443,6 +493,7 @@ function Tiers() {
       name: "Founder Access",
       tag: "Tier 1",
       spots: "First 100 only",
+      tier: "founder",
       perks: [
         "Locked-in founder pricing forever",
         "Name on early believers page",
@@ -455,6 +506,55 @@ function Tiers() {
   ];
 
   const [open, setOpen] = useState(false);
+  const [pendingTier, setPendingTier] = useState<Tier | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState<string | null>(null);
+  const join = useServerFn(joinWaitlist);
+
+  function handleTierClick(t: Tier) {
+    const heroInput = document.getElementById("email") as HTMLInputElement | null;
+    const email = (heroInput?.value ?? "").trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setTimeout(() => heroInput?.focus({ preventScroll: true }), 600);
+      setErr("Enter your email above first, then click your tier.");
+      return;
+    }
+    setPendingTier(t);
+    void submitTierFromButton(t, email);
+  }
+
+
+  async function submitTierFromButton(t: Tier, email: string) {
+    setSubmitting(true);
+    setErr(null);
+    try {
+      const result = await join({ data: { email, sourceButton: t } });
+      if (result.status === "closed") {
+        setErr("Waitlist is full.");
+      } else {
+        onSuccess(result.tier as Tier, result.status === "already_joined");
+      }
+    } catch {
+      setErr("Something went wrong.");
+    } finally {
+      setSubmitting(false);
+      setPendingTier(null);
+    }
+  }
+
+  if (allClosed) {
+    return (
+      <section className="mx-auto max-w-3xl px-6 pb-32 text-center">
+        <h2 className="text-4xl font-semibold tracking-[-0.03em] md:text-5xl">
+          Waitlist <span className="text-gradient-purple">closed</span>
+        </h2>
+        <p className="mt-4 text-white/55">
+          Every tier is full. Thank you to everyone who believed early — see you at launch.
+        </p>
+      </section>
+    );
+  }
 
   return (
     <section className="mx-auto max-w-6xl px-6 pb-32">
@@ -463,86 +563,100 @@ function Tiers() {
           Waitlist <span className="text-gradient-purple">tiers</span>
         </h2>
         <p className="mt-3 text-white/55">The earlier you join, the more you keep.</p>
+        {err && <p className="mt-3 text-xs text-red-400/80">{err}</p>}
       </div>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
-        {tiers.map((t) => (
-          <div
-            key={t.name}
-            className={`relative flex flex-col rounded-2xl p-7 transition ${
-              t.highlight
-                ? "border border-[#c4b5fd]/40 bg-gradient-to-b from-[#c4b5fd]/[0.08] to-transparent shadow-[0_20px_80px_-30px_rgba(196,181,253,0.4)]"
-                : t.featured
-                  ? "card-hairline border-white/15"
-                  : "card-hairline"
-            }`}
-          >
-            {t.featured && !t.highlight && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-[#080808] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70">
-                Most Picked
-              </div>
-            )}
-            {t.highlight && (
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#c4b5fd] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#080808]">
-                Founder
-              </div>
-            )}
-            <div className="text-xs uppercase tracking-[0.2em] text-white/40">{t.tag}</div>
-            <div className="mt-2 text-2xl font-semibold tracking-tight">{t.name}</div>
-            <div className="mt-1 text-sm text-[#c4b5fd]">{t.spots}</div>
-            <ul className="mt-6 flex-1 space-y-3">
-              {t.perks.map((p) => (
-                <li key={p} className="flex items-start gap-3 text-sm text-white/70">
-                  <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#c4b5fd]" />
-                  {p}
-                </li>
-              ))}
-            </ul>
-
-            {t.highlight && (
-              <div className="mt-5 rounded-xl border border-[#c4b5fd]/15 bg-[#c4b5fd]/[0.04]">
-                <button
-                  type="button"
-                  onClick={() => setOpen((v) => !v)}
-                  aria-expanded={open}
-                  className="flex w-full items-center justify-between px-4 py-3 text-left text-xs uppercase tracking-[0.18em] text-[#c4b5fd]/90"
-                >
-                  What is Founder Access?
-                  <ChevronDown
-                    className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
-                  />
-                </button>
-                <div
-                  style={{
-                    maxHeight: open ? 220 : 0,
-                    transition: "max-height 400ms ease",
-                    overflow: "hidden",
-                  }}
-                >
-                  <p className="px-4 pb-4 text-sm leading-relaxed text-white/65">
-                    Founder Access means you believed in Gramis before anyone else. You get
-                    locked-in pricing forever, your name on our early believers page, and a direct
-                    line to the team to shape what we build.
-                  </p>
-                </div>
-              </div>
-            )}
-
-            <button
-              type="button"
-              onClick={() => {
-                document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
-                setTimeout(() => document.getElementById("email")?.focus({ preventScroll: true }), 600);
-              }}
-              className={`mt-6 h-11 rounded-xl text-sm font-semibold transition ${
+        {tiers.map((t) => {
+          const isFull = tierFull[t.tier];
+          return (
+            <div
+              key={t.name}
+              className={`relative flex flex-col rounded-2xl p-7 transition ${
+                isFull ? "opacity-60" : ""
+              } ${
                 t.highlight
-                  ? "bg-[#c4b5fd] text-[#080808] hover:bg-white"
-                  : "border border-white/15 bg-white/[0.03] text-white hover:border-[#c4b5fd]/40 hover:bg-white/[0.06]"
+                  ? "border border-[#c4b5fd]/40 bg-gradient-to-b from-[#c4b5fd]/[0.08] to-transparent shadow-[0_20px_80px_-30px_rgba(196,181,253,0.4)]"
+                  : t.featured
+                    ? "card-hairline border-white/15"
+                    : "card-hairline"
               }`}
             >
-              {t.highlight ? "Claim Founder Access" : "Join this tier"}
-            </button>
-          </div>
-        ))}
+              {t.featured && !t.highlight && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-[#080808] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70">
+                  Most Picked
+                </div>
+              )}
+              {t.highlight && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#c4b5fd] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#080808]">
+                  Founder
+                </div>
+              )}
+              <div className="text-xs uppercase tracking-[0.2em] text-white/40">{t.tag}</div>
+              <div className="mt-2 text-2xl font-semibold tracking-tight">{t.name}</div>
+              <div className="mt-1 text-sm text-[#c4b5fd]">{t.spots}</div>
+              <ul className="mt-6 flex-1 space-y-3">
+                {t.perks.map((p) => (
+                  <li key={p} className="flex items-start gap-3 text-sm text-white/70">
+                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#c4b5fd]" />
+                    {p}
+                  </li>
+                ))}
+              </ul>
+
+              {t.highlight && !isFull && (
+                <div className="mt-5 rounded-xl border border-[#c4b5fd]/15 bg-[#c4b5fd]/[0.04]">
+                  <button
+                    type="button"
+                    onClick={() => setOpen((v) => !v)}
+                    aria-expanded={open}
+                    className="flex w-full items-center justify-between px-4 py-3 text-left text-xs uppercase tracking-[0.18em] text-[#c4b5fd]/90"
+                  >
+                    What is Founder Access?
+                    <ChevronDown
+                      className={`h-3.5 w-3.5 transition-transform ${open ? "rotate-180" : ""}`}
+                    />
+                  </button>
+                  <div
+                    style={{
+                      maxHeight: open ? 220 : 0,
+                      transition: "max-height 400ms ease",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <p className="px-4 pb-4 text-sm leading-relaxed text-white/65">
+                      Founder Access means you believed in Gramis before anyone else. You get
+                      locked-in pricing forever, your name on our early believers page, and a direct
+                      line to the team to shape what we build.
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {isFull ? (
+                <div className="mt-6 inline-flex h-11 items-center justify-center rounded-xl border border-[#c4b5fd]/30 bg-[#c4b5fd]/10 text-sm font-semibold text-[#c4b5fd]">
+                  Filled — thank you ✓
+                </div>
+              ) : (
+                <button
+                  type="button"
+                  disabled={submitting && pendingTier === t.tier}
+                  onClick={() => handleTierClick(t.tier)}
+                  className={`mt-6 h-11 rounded-xl text-sm font-semibold transition disabled:opacity-60 ${
+                    t.highlight
+                      ? "bg-[#c4b5fd] text-[#080808] hover:bg-white"
+                      : "border border-white/15 bg-white/[0.03] text-white hover:border-[#c4b5fd]/40 hover:bg-white/[0.06]"
+                  }`}
+                >
+                  {submitting && pendingTier === t.tier
+                    ? "Joining…"
+                    : t.highlight
+                      ? "Claim Founder Access"
+                      : "Join this tier"}
+                </button>
+              )}
+            </div>
+          );
+        })}
       </div>
     </section>
   );
@@ -555,10 +669,7 @@ function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
         <Logo iconSize="h-14 w-14" showText={false} />
         <div>© 2026 Gramis. Built for serious creators.</div>
-        <Link
-          to="/guides/best-times-to-post"
-          className="text-white/70 transition hover:text-[#c4b5fd]"
-        >
+        <Link to="/guides/best-times-to-post" className="text-white/70 transition hover:text-[#c4b5fd]">
           Guides
         </Link>
       </div>
