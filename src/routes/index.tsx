@@ -507,50 +507,23 @@ function Tiers({
 
   const [open, setOpen] = useState(false);
   const [pendingTier, setPendingTier] = useState<Tier | null>(null);
-  const [emailDraft, setEmailDraft] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const join = useServerFn(joinWaitlist);
 
-  async function submitTier(t: Tier) {
-    const email = emailDraft.trim();
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      setErr("Enter a valid email above first.");
-      document.getElementById("email")?.focus();
-      document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
-      return;
-    }
-    setSubmitting(true);
-    setErr(null);
-    try {
-      const result = await join({ data: { email, sourceButton: t } });
-      if (result.status === "closed") {
-        setErr("Waitlist is full.");
-      } else {
-        onSuccess(result.tier as Tier, result.status === "already_joined");
-        setEmailDraft("");
-      }
-    } catch {
-      setErr("Something went wrong.");
-    } finally {
-      setSubmitting(false);
-      setPendingTier(null);
-    }
-  }
-
   function handleTierClick(t: Tier) {
-    // Read live value from hero email input (single source of truth)
     const heroInput = document.getElementById("email") as HTMLInputElement | null;
     const email = (heroInput?.value ?? "").trim();
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       document.getElementById("join")?.scrollIntoView({ behavior: "smooth", block: "start" });
       setTimeout(() => heroInput?.focus({ preventScroll: true }), 600);
+      setErr("Enter your email above first, then click your tier.");
       return;
     }
-    setEmailDraft(email);
     setPendingTier(t);
     void submitTierFromButton(t, email);
   }
+
 
   async function submitTierFromButton(t: Tier, email: string) {
     setSubmitting(true);
