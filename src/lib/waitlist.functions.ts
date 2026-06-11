@@ -112,9 +112,10 @@ export const joinWaitlist = createServerFn({ method: "POST" })
 export const getAllSignups = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { supabaseAdmin: client } = await import("@/integrations/supabase/client.server");
+    const supabaseAdmin = client as any;
     // Verify admin via has_role
-    const { data: roleRow } = await context.supabase
+    const { data: roleRow } = await (context.supabase as any)
       .from("user_roles")
       .select("role")
       .eq("user_id", context.userId)
