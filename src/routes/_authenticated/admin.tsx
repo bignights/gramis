@@ -97,18 +97,26 @@ function AdminPage() {
 
         <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
           {(["founder", "priority", "early_adopter"] as Tier[]).map((t) => {
-            const filled = counts[t];
-            const cap = TIER_CAPS[t];
-            const pct = Math.min(100, (filled / cap) * 100);
+            const real = counts[t];
+            // Founder tier: 31 fake baseline + up to 69 real = 100 public total
+            const baseline = t === "founder" ? 31 : 0;
+            const displayCap = t === "founder" ? 100 : TIER_CAPS[t];
+            const displayed = real + baseline;
+            const pct = Math.min(100, (displayed / displayCap) * 100);
             return (
               <div key={t} className="rounded-xl border border-white/10 bg-white/[0.03] p-5">
                 <div className="text-xs uppercase tracking-[0.18em] text-white/50">
                   {t.replace("_", " ")}
                 </div>
                 <div className="mt-1 text-3xl font-semibold">
-                  {filled}
-                  <span className="text-base text-white/40"> / {cap}</span>
+                  {displayed}
+                  <span className="text-base text-white/40"> / {displayCap}</span>
                 </div>
+                {baseline > 0 && (
+                  <div className="mt-1 text-xs text-white/40">
+                    {real} real · {baseline} baseline · {Math.max(0, TIER_CAPS[t] - real)} real spots left
+                  </div>
+                )}
                 <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
                   <div className="h-full bg-[#c4b5fd]" style={{ width: `${pct}%` }} />
                 </div>
