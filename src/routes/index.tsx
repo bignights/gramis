@@ -377,7 +377,8 @@ function Counter({ total }: { total: number }) {
 
 /* -------------------------------- Scarcity ------------------------------- */
 function Scarcity({ founderCount }: { founderCount: number }) {
-  const remaining = Math.max(0, TIER_CAPS.founder - BASELINE_OFFSET - founderCount);
+  const PUBLIC_FOUNDER_TOTAL = 100;
+  const remaining = Math.max(0, PUBLIC_FOUNDER_TOTAL - BASELINE_OFFSET - founderCount);
   const closed = founderCount >= TIER_CAPS.founder;
   return (
     <section className="mx-auto max-w-5xl px-6 pb-24">
