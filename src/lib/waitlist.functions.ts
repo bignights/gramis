@@ -5,7 +5,7 @@ import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
 
 export const TIER_CAPS = {
-  founder: 100,
+  founder: 69,
   priority: 300,
   early_adopter: 1000,
 } as const;
