@@ -12,4 +12,9 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  nitro: {
+    // Use rollup instead of rolldown to avoid WASM crash on WebContainer/Node 22
+    // (Invalid atomic access index in @rolldown/binding-wasm32-wasi)
+    builder: "rollup",
+  },
 });
