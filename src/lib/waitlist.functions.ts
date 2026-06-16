@@ -34,7 +34,7 @@ export const getWaitlistStats = createServerFn({ method: "GET" }).handler(async 
 });
 
 export const joinWaitlist = createServerFn({ method: "POST" })
-  .inputValidator(
+  .validator(
     z.object({
       email: emailSchema,
       sourceButton: z.enum(["hero", "founder", "priority", "early_adopter"]),
