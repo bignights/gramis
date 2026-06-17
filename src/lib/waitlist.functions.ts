@@ -1,6 +1,8 @@
 import { createServerFn } from "@tanstack/react-start";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
+import type { Database } from "@/integrations/supabase/types";
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
 
@@ -15,11 +17,11 @@ export type Tier = "founder" | "priority" | "early_adopter";
 const emailSchema = z.string().trim().toLowerCase().email().max(254);
 
 export const getWaitlistStats = createServerFn({ method: "GET" }).handler(async () => {
-  const { supabaseAdmin: client } = await import("@/integrations/supabase/client.server");
-  const supabaseAdmin = client as any;
+  const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+  const client = supabaseAdmin as SupabaseClient<Database>;
   const counts: Record<Tier, number> = { founder: 0, priority: 0, early_adopter: 0 };
   for (const tier of Object.keys(counts) as Tier[]) {
-    const { count } = await supabaseAdmin
+    const { count } = await client
       .from("waitlist_signups")
       .select("*", { count: "exact", head: true })
       .eq("tier", tier);
@@ -41,11 +43,11 @@ export const joinWaitlist = createServerFn({ method: "POST" })
     }),
   )
   .handler(async ({ data }) => {
-    const { supabaseAdmin: client } = await import("@/integrations/supabase/client.server");
-    const supabaseAdmin = client as any;
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const client = supabaseAdmin as SupabaseClient<Database>;
 
     // Already joined?
-    const { data: existing } = await supabaseAdmin
+    const { data: existing } = await client
       .from("waitlist_signups")
       .select("tier")
       .eq("email", data.email)
@@ -57,7 +59,7 @@ export const joinWaitlist = createServerFn({ method: "POST" })
     // Counts
     const counts: Record<Tier, number> = { founder: 0, priority: 0, early_adopter: 0 };
     for (const tier of Object.keys(counts) as Tier[]) {
-      const { count } = await supabaseAdmin
+      const { count } = await client
         .from("waitlist_signups")
         .select("*", { count: "exact", head: true })
         .eq("tier", tier);
@@ -65,8 +67,7 @@ export const joinWaitlist = createServerFn({ method: "POST" })
     }
 
     // Decide tier
-    const preferred =
-      data.sourceButton === "hero" ? null : (data.sourceButton as Tier);
+    const preferred = data.sourceButton === "hero" ? null : (data.sourceButton as Tier);
     const order: Tier[] = ["founder", "priority", "early_adopter"];
     let assigned: Tier | null = null;
     if (preferred && counts[preferred] < TIER_CAPS[preferred]) {
@@ -81,7 +82,7 @@ export const joinWaitlist = createServerFn({ method: "POST" })
     }
     if (!assigned) return { status: "closed" as const };
 
-    const { error } = await supabaseAdmin
+    const { error } = await client
       .from("waitlist_signups")
       .insert({ email: data.email, tier: assigned, source_button: data.sourceButton });
     if (error) {
@@ -112,10 +113,10 @@ export const joinWaitlist = createServerFn({ method: "POST" })
 export const getAllSignups = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
-    const { supabaseAdmin: client } = await import("@/integrations/supabase/client.server");
-    const supabaseAdmin = client as any;
-    // Verify admin via has_role
-    const { data: roleRow } = await (context.supabase as any)
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const adminClient = supabaseAdmin as SupabaseClient<Database>;
+    // Verify admin via user_roles table
+    const { data: roleRow } = await context.supabase
       .from("user_roles")
       .select("role")
       .eq("user_id", context.userId)
@@ -123,7 +124,7 @@ export const getAllSignups = createServerFn({ method: "GET" })
       .maybeSingle();
     if (!roleRow) throw new Error("Forbidden");
 
-    const { data, error } = await supabaseAdmin
+    const { data, error } = await adminClient
       .from("waitlist_signups")
       .select("id, email, tier, source_button, created_at")
       .order("created_at", { ascending: false });

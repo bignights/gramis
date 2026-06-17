@@ -100,8 +100,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "The AI-powered social media management platform for serious creators. Join the private waitlist.",
       },
-      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp" },
-      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp" },
+      {
+        property: "og:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp",
+      },
+      {
+        name: "twitter:image",
+        content:
+          "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp",
+      },
       { name: "google-site-verification", content: "_z_m0_i3_hElu2anRO7q5o8BqK45dnD2D2ISVaHck_8" },
     ],
     links: [
@@ -118,8 +126,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@type": "Organization",
           name: "Gramis",
           url: "https://gramis.lovable.app",
-          description:
-            "AI-powered social media management platform for serious creators.",
+          description: "AI-powered social media management platform for serious creators.",
         }),
       },
       {

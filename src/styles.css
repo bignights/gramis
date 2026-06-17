@@ -79,13 +79,20 @@
   }
 
   .purple-glow {
-    background: radial-gradient(ellipse 60% 50% at 50% 0%, rgba(196, 181, 253, 0.18), transparent 70%);
+    background: radial-gradient(
+      ellipse 60% 50% at 50% 0%,
+      rgba(196, 181, 253, 0.18),
+      transparent 70%
+    );
   }
 
   .card-hairline {
-    border: 1px solid rgba(196, 181, 253, 0.10);
+    border: 1px solid rgba(196, 181, 253, 0.1);
     background: linear-gradient(180deg, rgba(196, 181, 253, 0.025), rgba(255, 255, 255, 0.005));
-    transition: border-color 220ms ease, transform 220ms ease, background 220ms ease;
+    transition:
+      border-color 220ms ease,
+      transform 220ms ease,
+      background 220ms ease;
   }
 
   .card-hairline:hover {

@@ -114,7 +114,8 @@ function AdminPage() {
                 </div>
                 {baseline > 0 && (
                   <div className="mt-1 text-xs text-white/40">
-                    {real} real · {baseline} baseline · {Math.max(0, TIER_CAPS[t] - real)} real spots left
+                    {real} real · {baseline} baseline · {Math.max(0, TIER_CAPS[t] - real)} real
+                    spots left
                   </div>
                 )}
                 <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-white/[0.06]">
@@ -137,10 +138,18 @@ function AdminPage() {
             </thead>
             <tbody>
               {rows === null && !error && (
-                <tr><td colSpan={4} className="px-4 py-8 text-center text-white/40">Loading…</td></tr>
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-white/40">
+                    Loading…
+                  </td>
+                </tr>
               )}
               {rows && rows.length === 0 && (
-                <tr><td colSpan={4} className="px-4 py-8 text-center text-white/40">No signups yet.</td></tr>
+                <tr>
+                  <td colSpan={4} className="px-4 py-8 text-center text-white/40">
+                    No signups yet.
+                  </td>
+                </tr>
               )}
               {rows?.map((r) => (
                 <tr key={r.id} className="border-t border-white/[0.06]">

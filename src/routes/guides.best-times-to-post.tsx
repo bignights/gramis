@@ -29,9 +29,7 @@ export const Route = createFileRoute("/guides/best-times-to-post")({
           "Data-driven peak hours and day-by-day breakdowns for Instagram and TikTok in 2026. Plus how Gramis AI automates perfect timing.",
       },
     ],
-    links: [
-      { rel: "canonical", href: "https://gramis.lovable.app/guides/best-times-to-post" },
-    ],
+    links: [{ rel: "canonical", href: "https://gramis.lovable.app/guides/best-times-to-post" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -66,19 +64,21 @@ export const Route = createFileRoute("/guides/best-times-to-post")({
 
 function BestTimesGuide() {
   return (
-    <div
-      className="relative min-h-screen overflow-hidden"
-      style={{ backgroundColor: "#080808" }}
-    >
+    <div className="relative min-h-screen overflow-hidden" style={{ backgroundColor: "#080808" }}>
       <div className="pointer-events-none absolute inset-0 bg-noise opacity-[0.6]" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[600px] purple-glow" />
 
       <div className="relative">
         <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-md bg-[#080808]/70">
           <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6">
-            <Link to="/" className="inline-flex items-center gap-3 font-semibold tracking-tight text-3xl">
+            <Link
+              to="/"
+              className="inline-flex items-center gap-3 font-semibold tracking-tight text-3xl"
+            >
               <img src={gramisLogo.url} alt="Gramis logo" className="h-14 w-14 object-contain" />
-              <span>Gram<span className="text-gradient-purple">is</span></span>
+              <span>
+                Gram<span className="text-gradient-purple">is</span>
+              </span>
             </Link>
             <div className="inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/20 bg-[#c4b5fd]/[0.06] px-3 py-1.5 text-xs">
               <span className="h-1.5 w-1.5 rounded-full bg-[#c4b5fd] shadow-[0_0_8px_#c4b5fd]" />
@@ -95,12 +95,12 @@ function BestTimesGuide() {
               2026 Guide
             </div>
             <h1 className="mt-8 text-4xl font-semibold leading-[1.1] tracking-[-0.04em] md:text-5xl lg:text-6xl">
-              The Best Time to Post on{" "}
-              <span className="text-gradient-purple">Instagram</span> and{" "}
+              The Best Time to Post on <span className="text-gradient-purple">Instagram</span> and{" "}
               <span className="text-gradient-purple">TikTok</span> in 2026
             </h1>
             <p className="mx-auto mt-6 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg">
-              Stop guessing. Here are the exact windows when your audience is most active — and how to hit them every time without lifting a finger.
+              Stop guessing. Here are the exact windows when your audience is most active — and how
+              to hit them every time without lifting a finger.
             </p>
           </div>
 
@@ -115,7 +115,10 @@ function BestTimesGuide() {
               </h2>
             </div>
             <p className="mt-4 leading-relaxed text-white/65">
-              Instagram&apos;s algorithm still rewards early engagement. Posts that collect likes, saves, and comments in the first 30 minutes get pushed to Explore and onto more feeds. In 2026, the platform has doubled down on Reels, but static carousels and Stories still drive strong reach when timed well.
+              Instagram&apos;s algorithm still rewards early engagement. Posts that collect likes,
+              saves, and comments in the first 30 minutes get pushed to Explore and onto more feeds.
+              In 2026, the platform has doubled down on Reels, but static carousels and Stories
+              still drive strong reach when timed well.
             </p>
 
             <div className="mt-8 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 md:p-8">
@@ -135,7 +138,10 @@ function BestTimesGuide() {
                 <div>
                   <h4 className="font-semibold tracking-tight">Pro Tip for 2026</h4>
                   <p className="mt-1 text-sm leading-relaxed text-white/65">
-                    Tuesday and Thursday mornings remain the highest-engagement slots across all industries. If you only post twice a week, choose 9:00–10:00 AM on those days. Reels posted at 7:00 PM on weekdays see 23% higher completion rates than midday uploads.
+                    Tuesday and Thursday mornings remain the highest-engagement slots across all
+                    industries. If you only post twice a week, choose 9:00–10:00 AM on those days.
+                    Reels posted at 7:00 PM on weekdays see 23% higher completion rates than midday
+                    uploads.
                   </p>
                 </div>
               </div>
@@ -153,7 +159,10 @@ function BestTimesGuide() {
               </h2>
             </div>
             <p className="mt-4 leading-relaxed text-white/65">
-              TikTok&apos;s For You Page is relentless — a video can go viral 12 hours after posting if the early loop rate is strong. In 2026, the platform rewards consistent creators more than ever. Posting at the same high-traffic windows trains the algorithm to push your content to the same engaged audience.
+              TikTok&apos;s For You Page is relentless — a video can go viral 12 hours after posting
+              if the early loop rate is strong. In 2026, the platform rewards consistent creators
+              more than ever. Posting at the same high-traffic windows trains the algorithm to push
+              your content to the same engaged audience.
             </p>
 
             <div className="mt-8 rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6 md:p-8">
@@ -173,7 +182,10 @@ function BestTimesGuide() {
                 <div>
                   <h4 className="font-semibold tracking-tight">Pro Tip for 2026</h4>
                   <p className="mt-1 text-sm leading-relaxed text-white/65">
-                    Tuesday at 7:00 PM and Friday at 5:00 PM are the two highest-traffic moments on TikTok right now. Post 15 minutes before the peak so your video is already circulating when the wave hits. Thursday afternoons are also strong for educational and tutorial content.
+                    Tuesday at 7:00 PM and Friday at 5:00 PM are the two highest-traffic moments on
+                    TikTok right now. Post 15 minutes before the peak so your video is already
+                    circulating when the wave hits. Thursday afternoons are also strong for
+                    educational and tutorial content.
                   </p>
                 </div>
               </div>
@@ -185,9 +197,7 @@ function BestTimesGuide() {
             <h2 className="text-2xl font-semibold tracking-tight md:text-3xl">
               Side-by-Side Quick Reference
             </h2>
-            <p className="mt-3 text-white/60">
-              The safest windows that overlap on both platforms.
-            </p>
+            <p className="mt-3 text-white/60">The safest windows that overlap on both platforms.</p>
             <div className="mt-8 overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.02]">
               <table className="w-full text-sm">
                 <thead>
@@ -200,10 +210,7 @@ function BestTimesGuide() {
                 </thead>
                 <tbody>
                   {quickRef.map((row) => (
-                    <tr
-                      key={row.day}
-                      className="border-b border-white/[0.05] last:border-b-0"
-                    >
+                    <tr key={row.day} className="border-b border-white/[0.05] last:border-b-0">
                       <td className="px-6 py-4 font-medium text-white/90">{row.day}</td>
                       <td className="px-6 py-4 text-white/70">{row.ig}</td>
                       <td className="px-6 py-4 text-white/70">{row.tt}</td>
@@ -227,7 +234,9 @@ function BestTimesGuide() {
                     Let AI Hit Every Window Automatically
                   </h3>
                   <p className="mt-2 leading-relaxed text-white/65">
-                    Gramis analyzes your audience&apos;s real activity patterns — not generic averages — and publishes your content at the exact minute engagement is peaking. No spreadsheets. No alarms. Just perfect timing, every time.
+                    Gramis analyzes your audience&apos;s real activity patterns — not generic
+                    averages — and publishes your content at the exact minute engagement is peaking.
+                    No spreadsheets. No alarms. Just perfect timing, every time.
                   </p>
                 </div>
                 <Link
@@ -248,10 +257,7 @@ function BestTimesGuide() {
             </h2>
             <div className="mt-8 space-y-4">
               {faqs.map((faq, i) => (
-                <div
-                  key={i}
-                  className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6"
-                >
+                <div key={i} className="rounded-2xl border border-white/[0.07] bg-white/[0.02] p-6">
                   <h3 className="font-semibold tracking-tight">{faq.q}</h3>
                   <p className="mt-2 text-sm leading-relaxed text-white/65">{faq.a}</p>
                 </div>

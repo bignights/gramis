@@ -1,24 +1,8 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
 import { useServerFn } from "@tanstack/react-start";
-import {
-  Zap,
-  ArrowRight,
-  Share2,
-  Sparkles,
-  Clock,
-  Music2,
-  Eraser,
-  BarChart3,
-  ChevronDown,
-  Check,
-} from "lucide-react";
-import {
-  joinWaitlist,
-  getWaitlistStats,
-  TIER_CAPS,
-  type Tier,
-} from "@/lib/waitlist.functions";
+import { Zap, ArrowRight, Share2, Sparkles, Clock, Music2, Eraser, ChartBar as BarChart3, ChevronDown, Check } from "lucide-react";
+import { joinWaitlist, getWaitlistStats, TIER_CAPS, type Tier } from "@/lib/waitlist.functions";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -43,10 +27,15 @@ function Index() {
   const fetchStats = useServerFn(getWaitlistStats);
 
   useEffect(() => {
-    fetchStats().then((s) => setStats(s)).catch(() => {});
+    fetchStats()
+      .then((s) => setStats(s))
+      .catch(() => {});
   }, [fetchStats]);
 
-  const refreshStats = () => fetchStats().then((s) => setStats(s)).catch(() => {});
+  const refreshStats = () =>
+    fetchStats()
+      .then((s) => setStats(s))
+      .catch(() => {});
 
   const tierFull = {
     founder: stats.founder >= TIER_CAPS.founder,
@@ -271,9 +260,7 @@ function Hero({
         ) : error ? (
           <span className="text-red-400/80">{error}</span>
         ) : (
-          <span className="text-white/40">
-            No spam. First 100 get Founder Access — forever.
-          </span>
+          <span className="text-white/40">No spam. First 100 get Founder Access — forever.</span>
         )}
       </div>
     </section>
@@ -415,12 +402,42 @@ function Scarcity({ founderCount }: { founderCount: number }) {
 /* -------------------------------- Features ------------------------------- */
 function Features() {
   const features = [
-    { n: "01", t: "Cross-platform distribution", d: "Publish once. Land natively on every platform with the right format, ratio, and caption.", icon: Share2 },
-    { n: "02", t: "AI caption engine", d: "Captions trained on your voice, your audience, and what's converting right now.", icon: Sparkles },
-    { n: "03", t: "Smart scheduling", d: "Posts go live the exact moment your audience is most active — no guesswork.", icon: Clock },
-    { n: "04", t: "Trending sound discovery", d: "Surface sounds before they peak. Get on the wave, not behind it.", icon: Music2 },
-    { n: "05", t: "Watermark removal", d: "Repurpose any clip cleanly across platforms without leaving traces.", icon: Eraser },
-    { n: "06", t: "Analytics dashboard", d: "Every metric that matters in one place. Track growth, not vanity.", icon: BarChart3 },
+    {
+      n: "01",
+      t: "Cross-platform distribution",
+      d: "Publish once. Land natively on every platform with the right format, ratio, and caption.",
+      icon: Share2,
+    },
+    {
+      n: "02",
+      t: "AI caption engine",
+      d: "Captions trained on your voice, your audience, and what's converting right now.",
+      icon: Sparkles,
+    },
+    {
+      n: "03",
+      t: "Smart scheduling",
+      d: "Posts go live the exact moment your audience is most active — no guesswork.",
+      icon: Clock,
+    },
+    {
+      n: "04",
+      t: "Trending sound discovery",
+      d: "Surface sounds before they peak. Get on the wave, not behind it.",
+      icon: Music2,
+    },
+    {
+      n: "05",
+      t: "Watermark removal",
+      d: "Repurpose any clip cleanly across platforms without leaving traces.",
+      icon: Eraser,
+    },
+    {
+      n: "06",
+      t: "Analytics dashboard",
+      d: "Every metric that matters in one place. Track growth, not vanity.",
+      icon: BarChart3,
+    },
   ];
   return (
     <section className="mx-auto max-w-6xl px-6 pb-28">
@@ -475,7 +492,11 @@ function Tiers({
       tag: "Tier 3",
       spots: "Spots 301–1000",
       tier: "early_adopter",
-      perks: ["Beta access before public launch", "30% off first 3 months", "Founding member badge"],
+      perks: [
+        "Beta access before public launch",
+        "30% off first 3 months",
+        "Founding member badge",
+      ],
     },
     {
       name: "Priority Access",
@@ -524,7 +545,6 @@ function Tiers({
     setPendingTier(t);
     void submitTierFromButton(t, email);
   }
-
 
   async function submitTierFromButton(t: Tier, email: string) {
     setSubmitting(true);
@@ -670,7 +690,10 @@ function Footer() {
       <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
         <Logo iconSize="h-14 w-14" showText={false} />
         <div>© 2026 Gramis. Built for serious creators.</div>
-        <Link to="/guides/best-times-to-post" className="text-white/70 transition hover:text-[#c4b5fd]">
+        <Link
+          to="/guides/best-times-to-post"
+          className="text-white/70 transition hover:text-[#c4b5fd]"
+        >
           Guides
         </Link>
       </div>
