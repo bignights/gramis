@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
 
-const BASE_URL = "https://gramis.lovable.app";
+const BASE_URL = process.env.VITE_SITE_URL || process.env.SITE_URL || "https://gramis.app";
 
 interface SitemapEntry {
   path: string;

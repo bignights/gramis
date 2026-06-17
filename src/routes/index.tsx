@@ -5,10 +5,6 @@ import { Zap, ArrowRight, Share2, Sparkles, Clock, Music2, Eraser, ChartBar as B
 import { joinWaitlist, getWaitlistStats, TIER_CAPS, type Tier } from "@/lib/waitlist.functions";
 
 export const Route = createFileRoute("/")({
-  head: () => ({
-    meta: [{ property: "og:url", content: "https://gramis.lovable.app/" }],
-    links: [{ rel: "canonical", href: "https://gramis.lovable.app/" }],
-  }),
   component: Index,
 });
 

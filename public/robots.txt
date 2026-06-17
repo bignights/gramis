@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://gramis.lovable.app/sitemap.xml
+Sitemap: https://gramis.app/sitemap.xml

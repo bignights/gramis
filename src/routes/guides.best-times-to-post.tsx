@@ -20,7 +20,6 @@ export const Route = createFileRoute("/guides/best-times-to-post")({
         content:
           "Data-driven peak hours and day-by-day breakdowns for Instagram and TikTok in 2026. Plus how Gramis AI automates perfect timing.",
       },
-      { property: "og:url", content: "https://gramis.lovable.app/guides/best-times-to-post" },
       { property: "og:type", content: "article" },
       { name: "twitter:title", content: "The Best Time to Post on Instagram and TikTok in 2026" },
       {
@@ -29,7 +28,6 @@ export const Route = createFileRoute("/guides/best-times-to-post")({
           "Data-driven peak hours and day-by-day breakdowns for Instagram and TikTok in 2026. Plus how Gramis AI automates perfect timing.",
       },
     ],
-    links: [{ rel: "canonical", href: "https://gramis.lovable.app/guides/best-times-to-post" }],
     scripts: [
       {
         type: "application/ld+json",
@@ -43,18 +41,9 @@ export const Route = createFileRoute("/guides/best-times-to-post")({
           publisher: {
             "@type": "Organization",
             name: "Gramis",
-            logo: {
-              "@type": "ImageObject",
-              url: "https://gramis.lovable.app/favicon.ico",
-            },
           },
           datePublished: "2026-01-06",
           dateModified: "2026-01-06",
-          url: "https://gramis.lovable.app/guides/best-times-to-post",
-          mainEntityOfPage: {
-            "@type": "WebPage",
-            "@id": "https://gramis.lovable.app/guides/best-times-to-post",
-          },
         }),
       },
     ],

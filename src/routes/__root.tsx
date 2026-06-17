@@ -93,24 +93,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:site", content: "@gramis" },
       { name: "twitter:title", content: "Gramis — AI-Powered Social Media Management" },
       {
         name: "twitter:description",
         content:
           "The AI-powered social media management platform for serious creators. Join the private waitlist.",
       },
-      {
-        property: "og:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp",
-      },
-      {
-        name: "twitter:image",
-        content:
-          "https://storage.googleapis.com/gpt-engineer-file-uploads/29RJvjpDRXNKH8MPeUhLGpyNSFu1/social-images/social-1780414108145-IMG_3772_(1).webp",
-      },
-      { name: "google-site-verification", content: "_z_m0_i3_hElu2anRO7q5o8BqK45dnD2D2ISVaHck_8" },
     ],
     links: [
       {
@@ -125,7 +114,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "Gramis",
-          url: "https://gramis.lovable.app",
           description: "AI-powered social media management platform for serious creators.",
         }),
       },
@@ -135,7 +123,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "WebSite",
           name: "Gramis",
-          url: "https://gramis.lovable.app",
         }),
       },
     ],
