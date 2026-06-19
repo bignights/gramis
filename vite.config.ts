@@ -16,10 +16,6 @@ export default defineConfig({
     // Use rollup instead of rolldown to avoid WASM crash on WebContainer/Node 22
     // (Invalid atomic access index in @rolldown/binding-wasm32-wasi)
     builder: "rollup",
-    output: {
-      dir: "dist",
-      serverDir: "dist/server",
-      publicDir: "dist/client",
-    },
+    preset: "netlify",
   },
 });
