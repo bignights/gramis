@@ -1,5 +1,6 @@
-import { T as TSS_SERVER_FUNCTION, a as createServerFn } from "./server-CEa0QXI2.mjs";
-import { r as requireSupabaseAuth } from "./auth-middleware-D6mg4qn-.mjs";
+import { T as TSS_SERVER_FUNCTION, a as createServerFn } from "./server-DR3079Rj.mjs";
+import { r as requireSupabaseAuth } from "./auth-middleware-CEesffxM.mjs";
+import { s as supabase } from "./client-rzgq_APd.mjs";
 import "../_libs/seroval.mjs";
 import "../_libs/react.mjs";
 import { s as stringType, o as objectType, e as enumType } from "../_libs/zod.mjs";
@@ -38,11 +39,6 @@ var createServerRpc = (serverFnMeta, splitImportFn) => {
   });
 };
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
-const TIER_CAPS = {
-  founder: 69,
-  priority: 300,
-  early_adopter: 1e3
-};
 const emailSchema = stringType().trim().toLowerCase().email().max(254);
 const getWaitlistStats_createServerFn_handler = createServerRpc({
   id: "0cc774eece9ec5e8c6af1e78d9233ce3bf1ba34400a879701292c048df4e918b",
@@ -52,29 +48,18 @@ const getWaitlistStats_createServerFn_handler = createServerRpc({
 const getWaitlistStats = createServerFn({
   method: "GET"
 }).handler(getWaitlistStats_createServerFn_handler, async () => {
+  const client = supabase;
   const {
-    supabaseAdmin
-  } = await import("./client.server-DYVThwkn.mjs");
-  const client = supabaseAdmin;
-  const counts = {
-    founder: 0,
-    priority: 0,
-    early_adopter: 0
-  };
-  for (const tier of Object.keys(counts)) {
-    const {
-      count
-    } = await client.from("waitlist_signups").select("*", {
-      count: "exact",
-      head: true
-    }).eq("tier", tier);
-    counts[tier] = count ?? 0;
-  }
+    data,
+    error
+  } = await client.rpc("get_waitlist_stats");
+  if (error) throw new Error(error.message);
+  const row = data?.[0];
   return {
-    founder: counts.founder,
-    priority: counts.priority,
-    earlyAdopter: counts.early_adopter,
-    total: counts.founder + counts.priority + counts.early_adopter
+    founder: row?.founder ?? 0,
+    priority: row?.priority ?? 0,
+    earlyAdopter: row?.early_adopter ?? 0,
+    total: row?.total ?? 0
   };
 });
 const joinWaitlist_createServerFn_handler = createServerRpc({
@@ -90,83 +75,36 @@ const joinWaitlist = createServerFn({
 })).handler(joinWaitlist_createServerFn_handler, async ({
   data
 }) => {
+  const client = supabase;
   const {
-    supabaseAdmin
-  } = await import("./client.server-DYVThwkn.mjs");
-  const client = supabaseAdmin;
-  const {
-    data: existing
-  } = await client.from("waitlist_signups").select("tier").eq("email", data.email).maybeSingle();
-  if (existing) {
-    return {
-      status: "already_joined",
-      tier: existing.tier
-    };
-  }
-  const counts = {
-    founder: 0,
-    priority: 0,
-    early_adopter: 0
-  };
-  for (const tier of Object.keys(counts)) {
-    const {
-      count
-    } = await client.from("waitlist_signups").select("*", {
-      count: "exact",
-      head: true
-    }).eq("tier", tier);
-    counts[tier] = count ?? 0;
-  }
-  const preferred = data.sourceButton === "hero" ? null : data.sourceButton;
-  const order = ["founder", "priority", "early_adopter"];
-  let assigned = null;
-  if (preferred && counts[preferred] < TIER_CAPS[preferred]) {
-    assigned = preferred;
-  } else {
-    for (const t of order) {
-      if (counts[t] < TIER_CAPS[t]) {
-        assigned = t;
-        break;
-      }
-    }
-  }
-  if (!assigned) return {
-    status: "closed"
-  };
-  const {
+    data: result,
     error
-  } = await client.from("waitlist_signups").insert({
-    email: data.email,
-    tier: assigned,
-    source_button: data.sourceButton
+  } = await client.rpc("join_waitlist", {
+    p_email: data.email,
+    p_source_button: data.sourceButton
   });
-  if (error) {
-    if (error.code === "23505") {
-      return {
-        status: "already_joined",
-        tier: assigned
-      };
+  if (error) throw new Error(error.message);
+  const row = result?.[0];
+  if (row?.status === "ok") {
+    try {
+      await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        },
+        body: JSON.stringify({
+          email: data.email,
+          tier: row.tier,
+          source_button: data.sourceButton
+        })
+      });
+    } catch {
     }
-    throw new Error(error.message);
-  }
-  try {
-    await fetch(FORMSPREE_ENDPOINT, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json"
-      },
-      body: JSON.stringify({
-        email: data.email,
-        tier: assigned,
-        source_button: data.sourceButton
-      })
-    });
-  } catch {
   }
   return {
-    status: "ok",
-    tier: assigned
+    status: row?.status ?? "closed",
+    tier: row?.tier ?? null
   };
 });
 const getAllSignups_createServerFn_handler = createServerRpc({
@@ -180,17 +118,14 @@ const getAllSignups = createServerFn({
   context
 }) => {
   const {
-    supabaseAdmin
-  } = await import("./client.server-DYVThwkn.mjs");
-  const adminClient = supabaseAdmin;
-  const {
     data: roleRow
   } = await context.supabase.from("user_roles").select("role").eq("user_id", context.userId).eq("role", "admin").maybeSingle();
   if (!roleRow) throw new Error("Forbidden");
+  const client = context.supabase;
   const {
     data,
     error
-  } = await adminClient.from("waitlist_signups").select("id, email, tier, source_button, created_at").order("created_at", {
+  } = await client.from("waitlist_signups").select("id, email, tier, source_button, created_at").order("created_at", {
     ascending: false
   });
   if (error) throw new Error(error.message);

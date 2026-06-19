@@ -106,15 +106,15 @@ async function getStartManifest(matchedRoutes) {
 const manifest = {
   "0cc774eece9ec5e8c6af1e78d9233ce3bf1ba34400a879701292c048df4e918b": {
     functionName: "getWaitlistStats_createServerFn_handler",
-    importer: () => import("./waitlist.functions-CuJRCAm8.mjs")
+    importer: () => import("./waitlist.functions-RXDgiaiI.mjs")
   },
   "84d93890dd9c1e59a64f5ae8101da2c7f60e63742e9ff41c41f350a81144ccda": {
     functionName: "joinWaitlist_createServerFn_handler",
-    importer: () => import("./waitlist.functions-CuJRCAm8.mjs")
+    importer: () => import("./waitlist.functions-RXDgiaiI.mjs")
   },
   "f978c420bb838533f8f04acf4d76a18e6c52c6bb174c9fa5c826a875e773f092": {
     functionName: "getAllSignups_createServerFn_handler",
-    importer: () => import("./waitlist.functions-CuJRCAm8.mjs")
+    importer: () => import("./waitlist.functions-RXDgiaiI.mjs")
   }
 };
 async function getServerFnById(id, access) {
@@ -1354,8 +1354,8 @@ var getBaseManifest = getProdBaseManifest;
 var createEarlyHintsForRequest = createEarlyHintsCollector;
 async function loadEntries() {
   const [routerEntry, startEntry, pluginAdapters] = await Promise.all([
-    import("./router-DcTrqnDq.mjs"),
-    import("./start-DvA46Wg5.mjs"),
+    import("./router-DzIuvJ1i.mjs"),
+    import("./start-BHhlNznQ.mjs"),
     import("./empty-plugin-adapters-BFgPZ6_d.mjs")
   ]);
   return {
