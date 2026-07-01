@@ -3,7 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
 
