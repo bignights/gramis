@@ -17,5 +17,5 @@ export default defineConfig({
     // (Invalid atomic access index in @rolldown/binding-wasm32-wasi)
     builder: "rollup",
     preset: "netlify",
-  },
+  } as never,
 });

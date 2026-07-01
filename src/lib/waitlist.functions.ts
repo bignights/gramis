@@ -18,7 +18,7 @@ export type Tier = "founder" | "priority" | "early_adopter";
 const emailSchema = z.string().trim().toLowerCase().email().max(254);
 
 export const getWaitlistStats = createServerFn({ method: "GET" }).handler(async () => {
-  const client = supabase as SupabaseClient<Database>;
+  const client = supabase as unknown as SupabaseClient;
   const { data, error } = await client.rpc("get_waitlist_stats");
   if (error) throw new Error(error.message);
   const row = (data as { founder: number; priority: number; early_adopter: number; total: number }[])?.[0];
@@ -31,14 +31,16 @@ export const getWaitlistStats = createServerFn({ method: "GET" }).handler(async 
 });
 
 export const joinWaitlist = createServerFn({ method: "POST" })
-  .validator(
-    z.object({
-      email: emailSchema,
-      sourceButton: z.enum(["hero", "founder", "priority", "early_adopter"]),
-    }),
+  .inputValidator((input: { email: string; sourceButton: "hero" | "founder" | "priority" | "early_adopter" }) =>
+    z
+      .object({
+        email: emailSchema,
+        sourceButton: z.enum(["hero", "founder", "priority", "early_adopter"]),
+      })
+      .parse(input),
   )
   .handler(async ({ data }) => {
-    const client = supabase as SupabaseClient<Database>;
+    const client = supabase as unknown as SupabaseClient;
     const { data: result, error } = await client.rpc("join_waitlist", {
       p_email: data.email,
       p_source_button: data.sourceButton,
