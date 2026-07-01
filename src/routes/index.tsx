@@ -148,12 +148,15 @@ function Logo({
 
 function Navbar() {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-md bg-[#080808]/70">
+    <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-xl bg-[#080808]/75">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
         <Logo className="text-3xl" iconSize="h-14 w-14" />
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/20 bg-[#c4b5fd]/[0.06] px-3 py-1.5 text-xs">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#c4b5fd] shadow-[0_0_8px_#c4b5fd]" />
-          <span className="text-white/80">Private Waitlist</span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c4b5fd] opacity-60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#c4b5fd] shadow-[0_0_10px_#c4b5fd]" />
+          </span>
+          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/70">Private Waitlist</span>
         </div>
       </div>
     </header>
