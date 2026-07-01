@@ -450,26 +450,34 @@ function Features() {
     },
   ];
   return (
-    <section className="mx-auto max-w-6xl px-6 pb-28">
-      <div className="mb-12 max-w-2xl">
-        <h2 className="text-4xl font-semibold tracking-[-0.03em] md:text-5xl">
-          Built for <span className="text-gradient-purple">serious creators.</span>
-        </h2>
-        <p className="mt-3 text-white/55">Six tools. One workflow. Zero friction.</p>
+    <section className="mx-auto max-w-6xl px-6 pb-32">
+      <div className="mb-14 flex items-end justify-between gap-8">
+        <div className="max-w-2xl">
+          <div className="eyebrow text-[#c4b5fd]/80">Capabilities — 06</div>
+          <h2 className="mt-4 text-4xl font-semibold tracking-[-0.035em] md:text-6xl">
+            Built for <span className="text-gradient-purple">serious creators.</span>
+          </h2>
+          <p className="mt-4 text-white/50 md:text-lg">Six tools. One workflow. Zero friction.</p>
+        </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="hairline mb-6" />
+      <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.06] md:grid-cols-2 lg:grid-cols-3">
         {features.map((f) => {
           const Icon = f.icon;
           return (
-            <div key={f.n} className="card-hairline group rounded-2xl p-6">
+            <div
+              key={f.n}
+              className="group relative bg-[#080808] p-7 transition hover:bg-white/[0.015]"
+            >
               <div className="flex items-center justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] transition group-hover:border-[#c4b5fd]/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.02] transition group-hover:border-[#c4b5fd]/40">
                   <Icon className="h-4 w-4 text-[#c4b5fd]" />
                 </div>
-                <span className="text-xs font-mono text-white/30">{f.n}</span>
+                <span className="num text-[11px] tracking-[0.2em] text-white/25">{f.n}</span>
               </div>
-              <h3 className="mt-5 text-lg font-semibold tracking-tight">{f.t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/55">{f.d}</p>
+              <h3 className="mt-6 text-lg font-semibold tracking-[-0.01em]">{f.t}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/50">{f.d}</p>
+              <div className="mt-6 h-px w-8 bg-[#c4b5fd]/0 transition group-hover:w-16 group-hover:bg-[#c4b5fd]/60" />
             </div>
           );
         })}
