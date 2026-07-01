@@ -202,16 +202,19 @@ function Hero({
   }
 
   return (
-    <section id="join" className="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center md:pt-32 md:pb-28">
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/60">
-        The future of social media
+    <section id="join" className="relative mx-auto max-w-6xl px-6 pt-28 pb-24 text-center md:pt-40 md:pb-32">
+      <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1">
+        <span className="h-1 w-1 rounded-full bg-[#c4b5fd]" />
+        <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-white/60">
+          Early Access — v1.0
+        </span>
       </div>
-      <h1 className="mx-auto mt-8 max-w-5xl text-5xl font-semibold leading-[1.02] tracking-[-0.04em] md:text-7xl lg:text-8xl">
+      <h1 className="mx-auto mt-10 max-w-5xl text-[44px] font-semibold leading-[0.98] tracking-[-0.045em] md:text-7xl lg:text-[104px]">
         One platform.
         <br />
         <span className="text-gradient-purple">Every audience.</span>
       </h1>
-      <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg">
+      <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-white/55 md:text-lg">
         Schedule, distribute, and grow across every platform — powered by AI that learns your
         content, discovers trending sounds before they peak, and posts at the exact moment your
         audience is watching.
@@ -220,7 +223,7 @@ function Hero({
       <form
         onSubmit={handleSubmit}
         noValidate
-        className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-2 sm:flex-row"
+        className="mx-auto mt-12 flex w-full max-w-lg flex-col gap-2 sm:flex-row"
       >
         <div className="relative flex-1">
           <input
@@ -234,10 +237,10 @@ function Hero({
             onBlur={() => setTouched(true)}
             aria-invalid={showError}
             disabled={allClosed}
-            className={`h-12 w-full rounded-xl border bg-white/[0.04] px-4 pr-10 text-sm text-white placeholder:text-white/30 outline-none transition focus:bg-white/[0.06] focus:ring-2 disabled:opacity-50 ${
+            className={`h-12 w-full rounded-xl border bg-white/[0.03] px-4 pr-10 text-sm text-white placeholder:text-white/25 outline-none transition focus:bg-white/[0.05] focus:ring-2 disabled:opacity-50 ${
               showError
                 ? "border-red-400/40 focus:border-red-400/60 focus:ring-red-400/20"
-                : "border-white/10 focus:border-[#c4b5fd]/40 focus:ring-[#c4b5fd]/20"
+                : "border-white/10 focus:border-[#c4b5fd]/40 focus:ring-[#c4b5fd]/15"
             }`}
           />
           {valid && (
@@ -247,19 +250,19 @@ function Hero({
         <button
           type="submit"
           disabled={loading || allClosed}
-          className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#c4b5fd] px-6 text-sm font-semibold text-[#080808] shadow-[0_8px_30px_-8px_rgba(196,181,253,0.6)] transition hover:bg-white hover:shadow-[0_8px_30px_-4px_rgba(196,181,253,0.8)] disabled:opacity-60"
+          className="btn-shine group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-semibold text-[#080808] transition hover:bg-white/95 disabled:opacity-60"
         >
           {loading ? "Joining…" : allClosed ? "Waitlist closed" : "Get Early Access"}
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </button>
       </form>
-      <div className="mt-3 h-4 text-xs">
+      <div className="mt-4 h-4 text-[11px] tracking-wide">
         {showError ? (
           <span className="text-red-400/80">Enter a valid email address.</span>
         ) : error ? (
           <span className="text-red-400/80">{error}</span>
         ) : (
-          <span className="text-white/40">No spam. First 100 get Founder Access — forever.</span>
+          <span className="text-white/35">No spam. First 100 get Founder Access — forever.</span>
         )}
       </div>
     </section>
