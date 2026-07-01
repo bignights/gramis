@@ -148,12 +148,15 @@ function Logo({
 
 function Navbar() {
   return (
-    <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-md bg-[#080808]/70">
+    <header className="sticky top-0 z-40 border-b border-white/[0.06] backdrop-blur-xl bg-[#080808]/75">
       <div className="mx-auto flex h-20 max-w-6xl items-center justify-between px-6">
         <Logo className="text-3xl" iconSize="h-14 w-14" />
-        <div className="inline-flex items-center gap-2 rounded-full border border-[#c4b5fd]/20 bg-[#c4b5fd]/[0.06] px-3 py-1.5 text-xs">
-          <span className="h-1.5 w-1.5 rounded-full bg-[#c4b5fd] shadow-[0_0_8px_#c4b5fd]" />
-          <span className="text-white/80">Private Waitlist</span>
+        <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#c4b5fd] opacity-60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-[#c4b5fd] shadow-[0_0_10px_#c4b5fd]" />
+          </span>
+          <span className="text-[10px] font-medium uppercase tracking-[0.22em] text-white/70">Private Waitlist</span>
         </div>
       </div>
     </header>
@@ -199,16 +202,19 @@ function Hero({
   }
 
   return (
-    <section id="join" className="mx-auto max-w-6xl px-6 pt-24 pb-20 text-center md:pt-32 md:pb-28">
-      <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1 text-xs uppercase tracking-[0.18em] text-white/60">
-        The future of social media
+    <section id="join" className="relative mx-auto max-w-6xl px-6 pt-28 pb-24 text-center md:pt-40 md:pb-32">
+      <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-3 py-1">
+        <span className="h-1 w-1 rounded-full bg-[#c4b5fd]" />
+        <span className="text-[10px] font-medium uppercase tracking-[0.24em] text-white/60">
+          Early Access — v1.0
+        </span>
       </div>
-      <h1 className="mx-auto mt-8 max-w-5xl text-5xl font-semibold leading-[1.02] tracking-[-0.04em] md:text-7xl lg:text-8xl">
+      <h1 className="mx-auto mt-10 max-w-5xl text-[44px] font-semibold leading-[0.98] tracking-[-0.045em] md:text-7xl lg:text-[104px]">
         One platform.
         <br />
         <span className="text-gradient-purple">Every audience.</span>
       </h1>
-      <p className="mx-auto mt-7 max-w-2xl text-base leading-relaxed text-white/60 md:text-lg">
+      <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-white/55 md:text-lg">
         Schedule, distribute, and grow across every platform — powered by AI that learns your
         content, discovers trending sounds before they peak, and posts at the exact moment your
         audience is watching.
@@ -217,7 +223,7 @@ function Hero({
       <form
         onSubmit={handleSubmit}
         noValidate
-        className="mx-auto mt-10 flex w-full max-w-lg flex-col gap-2 sm:flex-row"
+        className="mx-auto mt-12 flex w-full max-w-lg flex-col gap-2 sm:flex-row"
       >
         <div className="relative flex-1">
           <input
@@ -231,10 +237,10 @@ function Hero({
             onBlur={() => setTouched(true)}
             aria-invalid={showError}
             disabled={allClosed}
-            className={`h-12 w-full rounded-xl border bg-white/[0.04] px-4 pr-10 text-sm text-white placeholder:text-white/30 outline-none transition focus:bg-white/[0.06] focus:ring-2 disabled:opacity-50 ${
+            className={`h-12 w-full rounded-xl border bg-white/[0.03] px-4 pr-10 text-sm text-white placeholder:text-white/25 outline-none transition focus:bg-white/[0.05] focus:ring-2 disabled:opacity-50 ${
               showError
                 ? "border-red-400/40 focus:border-red-400/60 focus:ring-red-400/20"
-                : "border-white/10 focus:border-[#c4b5fd]/40 focus:ring-[#c4b5fd]/20"
+                : "border-white/10 focus:border-[#c4b5fd]/40 focus:ring-[#c4b5fd]/15"
             }`}
           />
           {valid && (
@@ -244,19 +250,19 @@ function Hero({
         <button
           type="submit"
           disabled={loading || allClosed}
-          className="group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-[#c4b5fd] px-6 text-sm font-semibold text-[#080808] shadow-[0_8px_30px_-8px_rgba(196,181,253,0.6)] transition hover:bg-white hover:shadow-[0_8px_30px_-4px_rgba(196,181,253,0.8)] disabled:opacity-60"
+          className="btn-shine group inline-flex h-12 items-center justify-center gap-2 rounded-xl bg-white px-6 text-sm font-semibold text-[#080808] transition hover:bg-white/95 disabled:opacity-60"
         >
           {loading ? "Joining…" : allClosed ? "Waitlist closed" : "Get Early Access"}
           <ArrowRight className="h-4 w-4 transition group-hover:translate-x-0.5" />
         </button>
       </form>
-      <div className="mt-3 h-4 text-xs">
+      <div className="mt-4 h-4 text-[11px] tracking-wide">
         {showError ? (
           <span className="text-red-400/80">Enter a valid email address.</span>
         ) : error ? (
           <span className="text-red-400/80">{error}</span>
         ) : (
-          <span className="text-white/40">No spam. First 100 get Founder Access — forever.</span>
+          <span className="text-white/35">No spam. First 100 get Founder Access — forever.</span>
         )}
       </div>
     </section>
@@ -343,14 +349,14 @@ function Counter({ total }: { total: number }) {
     { v: "∞", l: "Reach" },
   ];
   return (
-    <section className="mx-auto max-w-4xl px-6 pb-20">
-      <div className="grid grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/[0.07] bg-white/[0.02] py-8">
+    <section className="mx-auto max-w-5xl px-6 pb-24">
+      <div className="grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.06]">
         {stats.map((s) => (
-          <div key={s.l} className="px-4 text-center">
-            <div className="text-3xl font-semibold tracking-tight md:text-4xl">{s.v}</div>
-            <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/50 md:text-xs">
-              {s.l}
+          <div key={s.l} className="bg-[#080808] px-4 py-10 text-center">
+            <div className="num text-4xl font-light tracking-[-0.02em] text-white md:text-5xl">
+              {s.v}
             </div>
+            <div className="eyebrow mt-3">{s.l}</div>
           </div>
         ))}
       </div>
@@ -364,21 +370,26 @@ function Scarcity({ founderCount }: { founderCount: number }) {
   const remaining = Math.max(0, PUBLIC_FOUNDER_TOTAL - BASELINE_OFFSET - founderCount);
   const closed = founderCount >= TIER_CAPS.founder;
   return (
-    <section className="mx-auto max-w-5xl px-6 pb-24">
+    <section className="mx-auto max-w-5xl px-6 pb-28">
       <div
-        className={`card-hairline relative flex flex-col items-start justify-between gap-6 rounded-2xl p-6 md:flex-row md:items-center md:p-8 ${closed ? "opacity-70" : ""}`}
+        className={`relative flex flex-col items-start justify-between gap-6 overflow-hidden rounded-2xl border border-white/[0.07] bg-gradient-to-br from-white/[0.03] to-transparent p-6 md:flex-row md:items-center md:p-8 ${closed ? "opacity-70" : ""}`}
       >
-        <div className="flex items-start gap-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#c4b5fd]/30 bg-[#c4b5fd]/10">
+        <div
+          className="pointer-events-none absolute -left-20 -top-20 h-56 w-56 rounded-full"
+          style={{ background: "radial-gradient(closest-side, rgba(196,181,253,0.18), transparent 70%)" }}
+        />
+        <div className="relative flex items-start gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#c4b5fd]/25 bg-[#c4b5fd]/[0.08]">
             <Zap className="h-5 w-5 text-[#c4b5fd]" />
           </div>
           <div>
-            <div className="text-lg font-semibold tracking-tight">
+            <div className="eyebrow text-[#c4b5fd]/80">Scarcity Protocol</div>
+            <div className="mt-2 text-xl font-semibold tracking-[-0.02em] md:text-2xl">
               {closed
                 ? "Founder Access — closed forever ✓"
                 : "First 100 get Founder Access — forever."}
             </div>
-            <p className="mt-1 max-w-xl text-sm text-white/55">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/50">
               {closed
                 ? "All 100 Founder spots are taken. Join Priority Access below for the next-best perks."
                 : "Locked-in pricing, direct line to the team, and your name on our early believers page. Closes permanently at 100."}
@@ -386,8 +397,11 @@ function Scarcity({ founderCount }: { founderCount: number }) {
           </div>
         </div>
         {!closed && (
-          <div className="shrink-0 rounded-full border border-[#c4b5fd]/30 bg-[#c4b5fd]/10 px-4 py-2 text-sm font-medium text-[#c4b5fd]">
-            {remaining} Founder spots remaining
+          <div className="relative shrink-0 text-right">
+            <div className="num text-3xl font-light tracking-tight text-[#c4b5fd] md:text-4xl">
+              {remaining}
+            </div>
+            <div className="eyebrow mt-1 text-white/40">Founder spots left</div>
           </div>
         )}
       </div>
@@ -436,26 +450,34 @@ function Features() {
     },
   ];
   return (
-    <section className="mx-auto max-w-6xl px-6 pb-28">
-      <div className="mb-12 max-w-2xl">
-        <h2 className="text-4xl font-semibold tracking-[-0.03em] md:text-5xl">
-          Built for <span className="text-gradient-purple">serious creators.</span>
-        </h2>
-        <p className="mt-3 text-white/55">Six tools. One workflow. Zero friction.</p>
+    <section className="mx-auto max-w-6xl px-6 pb-32">
+      <div className="mb-14 flex items-end justify-between gap-8">
+        <div className="max-w-2xl">
+          <div className="eyebrow text-[#c4b5fd]/80">Capabilities — 06</div>
+          <h2 className="mt-4 text-4xl font-semibold tracking-[-0.035em] md:text-6xl">
+            Built for <span className="text-gradient-purple">serious creators.</span>
+          </h2>
+          <p className="mt-4 text-white/50 md:text-lg">Six tools. One workflow. Zero friction.</p>
+        </div>
       </div>
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="hairline mb-6" />
+      <div className="grid grid-cols-1 gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.06] md:grid-cols-2 lg:grid-cols-3">
         {features.map((f) => {
           const Icon = f.icon;
           return (
-            <div key={f.n} className="card-hairline group rounded-2xl p-6">
+            <div
+              key={f.n}
+              className="group relative bg-[#080808] p-7 transition hover:bg-white/[0.015]"
+            >
               <div className="flex items-center justify-between">
-                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.03] transition group-hover:border-[#c4b5fd]/30">
+                <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-white/10 bg-white/[0.02] transition group-hover:border-[#c4b5fd]/40">
                   <Icon className="h-4 w-4 text-[#c4b5fd]" />
                 </div>
-                <span className="text-xs font-mono text-white/30">{f.n}</span>
+                <span className="num text-[11px] tracking-[0.2em] text-white/25">{f.n}</span>
               </div>
-              <h3 className="mt-5 text-lg font-semibold tracking-tight">{f.t}</h3>
-              <p className="mt-2 text-sm leading-relaxed text-white/55">{f.d}</p>
+              <h3 className="mt-6 text-lg font-semibold tracking-[-0.01em]">{f.t}</h3>
+              <p className="mt-2 text-sm leading-relaxed text-white/50">{f.d}</p>
+              <div className="mt-6 h-px w-8 bg-[#c4b5fd]/0 transition group-hover:w-16 group-hover:bg-[#c4b5fd]/60" />
             </div>
           );
         })}
@@ -575,11 +597,14 @@ function Tiers({
 
   return (
     <section className="mx-auto max-w-6xl px-6 pb-32">
-      <div className="mb-12 text-center">
-        <h2 className="text-4xl font-semibold tracking-[-0.03em] md:text-5xl">
-          Waitlist <span className="text-gradient-purple">tiers</span>
+      <div className="mb-14 text-center">
+        <div className="eyebrow text-[#c4b5fd]/80">Admission</div>
+        <h2 className="mt-4 text-4xl font-semibold tracking-[-0.035em] md:text-6xl">
+          Waitlist <span className="text-gradient-purple">tiers.</span>
         </h2>
-        <p className="mt-3 text-white/55">The earlier you join, the more you keep.</p>
+        <p className="mx-auto mt-4 max-w-md text-white/50">
+          The earlier you join, the more you keep. We prioritize quality over quantity.
+        </p>
         {err && <p className="mt-3 text-xs text-red-400/80">{err}</p>}
       </div>
       <div className="grid grid-cols-1 gap-5 md:grid-cols-3">
@@ -588,45 +613,56 @@ function Tiers({
           return (
             <div
               key={t.name}
-              className={`relative flex flex-col rounded-2xl p-7 transition ${
+              className={`relative flex flex-col overflow-hidden rounded-2xl p-8 transition ${
                 isFull ? "opacity-60" : ""
               } ${
                 t.highlight
-                  ? "border border-[#c4b5fd]/40 bg-gradient-to-b from-[#c4b5fd]/[0.08] to-transparent shadow-[0_20px_80px_-30px_rgba(196,181,253,0.4)]"
-                  : t.featured
-                    ? "card-hairline border-white/15"
-                    : "card-hairline"
+                  ? "border border-[#c4b5fd]/30 bg-gradient-to-b from-[#c4b5fd]/[0.06] to-transparent shadow-[0_30px_120px_-40px_rgba(196,181,253,0.5)]"
+                  : "border border-white/[0.07] bg-white/[0.015]"
               }`}
             >
+              {t.highlight && (
+                <div
+                  className="pointer-events-none absolute -right-12 -top-16 h-40 w-40 rounded-full"
+                  style={{ background: "radial-gradient(closest-side, rgba(196,181,253,0.28), transparent 70%)" }}
+                />
+              )}
               {t.featured && !t.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-white/15 bg-[#080808] px-3 py-1 text-[10px] uppercase tracking-[0.2em] text-white/70">
-                  Most Picked
+                <div className="absolute right-6 top-6 rounded-full border border-white/10 bg-white/[0.04] px-2.5 py-1 text-[9px] uppercase tracking-[0.22em] text-white/60">
+                  Most picked
                 </div>
               )}
               {t.highlight && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-[#c4b5fd] px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.2em] text-[#080808]">
+                <div className="absolute right-6 top-6 rounded-full bg-[#c4b5fd] px-2.5 py-1 text-[9px] font-semibold uppercase tracking-[0.22em] text-[#080808]">
                   Founder
                 </div>
               )}
-              <div className="text-xs uppercase tracking-[0.2em] text-white/40">{t.tag}</div>
-              <div className="mt-2 text-2xl font-semibold tracking-tight">{t.name}</div>
-              <div className="mt-1 text-sm text-[#c4b5fd]">{t.spots}</div>
-              <ul className="mt-6 flex-1 space-y-3">
+              <div className="relative">
+                <div className="eyebrow text-white/40">{t.tag}</div>
+                <div className="mt-3 text-2xl font-semibold tracking-[-0.02em] md:text-[26px]">
+                  {t.name}
+                </div>
+                <div className="num mt-2 text-sm tracking-wide text-[#c4b5fd]">{t.spots}</div>
+              </div>
+
+              <div className="my-6 h-px w-full bg-white/[0.06]" />
+
+              <ul className="relative flex-1 space-y-3.5">
                 {t.perks.map((p) => (
-                  <li key={p} className="flex items-start gap-3 text-sm text-white/70">
-                    <span className="mt-2 h-1 w-1 shrink-0 rounded-full bg-[#c4b5fd]" />
+                  <li key={p} className="flex items-start gap-3 text-sm leading-relaxed text-white/70">
+                    <span className="mt-[7px] h-1 w-1 shrink-0 rounded-full bg-[#c4b5fd]" />
                     {p}
                   </li>
                 ))}
               </ul>
 
               {t.highlight && !isFull && (
-                <div className="mt-5 rounded-xl border border-[#c4b5fd]/15 bg-[#c4b5fd]/[0.04]">
+                <div className="relative mt-6 rounded-xl border border-[#c4b5fd]/15 bg-[#c4b5fd]/[0.04]">
                   <button
                     type="button"
                     onClick={() => setOpen((v) => !v)}
                     aria-expanded={open}
-                    className="flex w-full items-center justify-between px-4 py-3 text-left text-xs uppercase tracking-[0.18em] text-[#c4b5fd]/90"
+                    className="flex w-full items-center justify-between px-4 py-3 text-left text-[10px] uppercase tracking-[0.22em] text-[#c4b5fd]/90"
                   >
                     What is Founder Access?
                     <ChevronDown
@@ -635,22 +671,22 @@ function Tiers({
                   </button>
                   <div
                     style={{
-                      maxHeight: open ? 220 : 0,
+                      maxHeight: open ? 240 : 0,
                       transition: "max-height 400ms ease",
                       overflow: "hidden",
                     }}
                   >
                     <p className="px-4 pb-4 text-sm leading-relaxed text-white/65">
-                      Founder Access means you believed in Gramis before anyone else. You get
-                      locked-in pricing forever, your name on our early believers page, and a direct
-                      line to the team to shape what we build.
+                      Founder Access means you believed in Gramis before anyone else. Locked-in
+                      pricing forever, name on our early believers page, and a direct line to the
+                      team to shape what we build.
                     </p>
                   </div>
                 </div>
               )}
 
               {isFull ? (
-                <div className="mt-6 inline-flex h-11 items-center justify-center rounded-xl border border-[#c4b5fd]/30 bg-[#c4b5fd]/10 text-sm font-semibold text-[#c4b5fd]">
+                <div className="relative mt-6 inline-flex h-12 items-center justify-center rounded-xl border border-[#c4b5fd]/25 bg-[#c4b5fd]/[0.08] text-sm font-semibold tracking-wide text-[#c4b5fd]">
                   Filled — thank you ✓
                 </div>
               ) : (
@@ -658,10 +694,10 @@ function Tiers({
                   type="button"
                   disabled={submitting && pendingTier === t.tier}
                   onClick={() => handleTierClick(t.tier)}
-                  className={`mt-6 h-11 rounded-xl text-sm font-semibold transition disabled:opacity-60 ${
+                  className={`btn-shine relative mt-6 h-12 rounded-xl text-sm font-semibold tracking-wide transition disabled:opacity-60 ${
                     t.highlight
-                      ? "bg-[#c4b5fd] text-[#080808] hover:bg-white"
-                      : "border border-white/15 bg-white/[0.03] text-white hover:border-[#c4b5fd]/40 hover:bg-white/[0.06]"
+                      ? "bg-white text-[#080808] hover:bg-white/95"
+                      : "border border-white/10 bg-white/[0.02] text-white hover:border-[#c4b5fd]/40 hover:bg-white/[0.05]"
                   }`}
                 >
                   {submitting && pendingTier === t.tier
@@ -682,13 +718,16 @@ function Tiers({
 /* -------------------------------- Footer --------------------------------- */
 function Footer() {
   return (
-    <footer className="border-t border-white/[0.06]">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-3 px-6 py-8 text-sm text-white/50 sm:flex-row">
-        <Logo iconSize="h-14 w-14" showText={false} />
-        <div>© 2026 Gramis. Built for serious creators.</div>
+    <footer className="relative border-t border-white/[0.06]">
+      <div className="hairline" />
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-6 py-12 sm:flex-row">
+        <Logo iconSize="h-12 w-12" showText={false} />
+        <div className="text-center text-[11px] uppercase tracking-[0.22em] text-white/40">
+          © 2026 Gramis — Built for serious creators.
+        </div>
         <Link
           to="/guides/best-times-to-post"
-          className="text-white/70 transition hover:text-[#c4b5fd]"
+          className="text-[11px] uppercase tracking-[0.22em] text-white/50 transition hover:text-[#c4b5fd]"
         >
           Guides
         </Link>
