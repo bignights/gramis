@@ -84,7 +84,7 @@ export const getAllSignups = createServerFn({ method: "GET" })
     if (!roleRow) throw new Error("Forbidden");
 
     // Admin has SELECT policy on waitlist_signups, so the user's client works
-    const client = context.supabase as SupabaseClient<Database>;
+    const client = context.supabase as unknown as SupabaseClient;
     const { data, error } = await client
       .from("waitlist_signups")
       .select("id, email, tier, source_button, created_at")
