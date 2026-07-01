@@ -349,14 +349,14 @@ function Counter({ total }: { total: number }) {
     { v: "∞", l: "Reach" },
   ];
   return (
-    <section className="mx-auto max-w-4xl px-6 pb-20">
-      <div className="grid grid-cols-3 divide-x divide-white/10 rounded-2xl border border-white/[0.07] bg-white/[0.02] py-8">
+    <section className="mx-auto max-w-5xl px-6 pb-24">
+      <div className="grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-white/[0.07] bg-white/[0.06]">
         {stats.map((s) => (
-          <div key={s.l} className="px-4 text-center">
-            <div className="text-3xl font-semibold tracking-tight md:text-4xl">{s.v}</div>
-            <div className="mt-1 text-[10px] uppercase tracking-[0.18em] text-white/50 md:text-xs">
-              {s.l}
+          <div key={s.l} className="bg-[#080808] px-4 py-10 text-center">
+            <div className="num text-4xl font-light tracking-[-0.02em] text-white md:text-5xl">
+              {s.v}
             </div>
+            <div className="eyebrow mt-3">{s.l}</div>
           </div>
         ))}
       </div>
@@ -370,21 +370,26 @@ function Scarcity({ founderCount }: { founderCount: number }) {
   const remaining = Math.max(0, PUBLIC_FOUNDER_TOTAL - BASELINE_OFFSET - founderCount);
   const closed = founderCount >= TIER_CAPS.founder;
   return (
-    <section className="mx-auto max-w-5xl px-6 pb-24">
+    <section className="mx-auto max-w-5xl px-6 pb-28">
       <div
-        className={`card-hairline relative flex flex-col items-start justify-between gap-6 rounded-2xl p-6 md:flex-row md:items-center md:p-8 ${closed ? "opacity-70" : ""}`}
+        className={`relative flex flex-col items-start justify-between gap-6 overflow-hidden rounded-2xl border border-white/[0.07] bg-gradient-to-br from-white/[0.03] to-transparent p-6 md:flex-row md:items-center md:p-8 ${closed ? "opacity-70" : ""}`}
       >
-        <div className="flex items-start gap-4">
-          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#c4b5fd]/30 bg-[#c4b5fd]/10">
+        <div
+          className="pointer-events-none absolute -left-20 -top-20 h-56 w-56 rounded-full"
+          style={{ background: "radial-gradient(closest-side, rgba(196,181,253,0.18), transparent 70%)" }}
+        />
+        <div className="relative flex items-start gap-4">
+          <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#c4b5fd]/25 bg-[#c4b5fd]/[0.08]">
             <Zap className="h-5 w-5 text-[#c4b5fd]" />
           </div>
           <div>
-            <div className="text-lg font-semibold tracking-tight">
+            <div className="eyebrow text-[#c4b5fd]/80">Scarcity Protocol</div>
+            <div className="mt-2 text-xl font-semibold tracking-[-0.02em] md:text-2xl">
               {closed
                 ? "Founder Access — closed forever ✓"
                 : "First 100 get Founder Access — forever."}
             </div>
-            <p className="mt-1 max-w-xl text-sm text-white/55">
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/50">
               {closed
                 ? "All 100 Founder spots are taken. Join Priority Access below for the next-best perks."
                 : "Locked-in pricing, direct line to the team, and your name on our early believers page. Closes permanently at 100."}
@@ -392,8 +397,11 @@ function Scarcity({ founderCount }: { founderCount: number }) {
           </div>
         </div>
         {!closed && (
-          <div className="shrink-0 rounded-full border border-[#c4b5fd]/30 bg-[#c4b5fd]/10 px-4 py-2 text-sm font-medium text-[#c4b5fd]">
-            {remaining} Founder spots remaining
+          <div className="relative shrink-0 text-right">
+            <div className="num text-3xl font-light tracking-tight text-[#c4b5fd] md:text-4xl">
+              {remaining}
+            </div>
+            <div className="eyebrow mt-1 text-white/40">Founder spots left</div>
           </div>
         )}
       </div>
