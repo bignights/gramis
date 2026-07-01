@@ -64,7 +64,22 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_waitlist_stats: {
+        Args: never
+        Returns: {
+          early_adopter: number
+          founder: number
+          priority: number
+          total: number
+        }[]
+      }
+      join_waitlist: {
+        Args: { p_email: string; p_source_button: string }
+        Returns: {
+          status: string
+          tier: Database["public"]["Enums"]["waitlist_tier"]
+        }[]
+      }
     }
     Enums: {
       app_role: "admin"
