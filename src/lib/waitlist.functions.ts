@@ -3,7 +3,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 import { supabase } from "@/integrations/supabase/client";
-import type { Database } from "@/integrations/supabase/types";
+
 
 const FORMSPREE_ENDPOINT = "https://formspree.io/f/xpqnverg";
 
@@ -18,7 +18,7 @@ export type Tier = "founder" | "priority" | "early_adopter";
 const emailSchema = z.string().trim().toLowerCase().email().max(254);
 
 export const getWaitlistStats = createServerFn({ method: "GET" }).handler(async () => {
-  const client = supabase as SupabaseClient<Database>;
+  const client = supabase as unknown as SupabaseClient;
   const { data, error } = await client.rpc("get_waitlist_stats");
   if (error) throw new Error(error.message);
   const row = (data as { founder: number; priority: number; early_adopter: number; total: number }[])?.[0];
@@ -31,14 +31,16 @@ export const getWaitlistStats = createServerFn({ method: "GET" }).handler(async 
 });
 
 export const joinWaitlist = createServerFn({ method: "POST" })
-  .validator(
-    z.object({
-      email: emailSchema,
-      sourceButton: z.enum(["hero", "founder", "priority", "early_adopter"]),
-    }),
+  .inputValidator((input: { email: string; sourceButton: "hero" | "founder" | "priority" | "early_adopter" }) =>
+    z
+      .object({
+        email: emailSchema,
+        sourceButton: z.enum(["hero", "founder", "priority", "early_adopter"]),
+      })
+      .parse(input),
   )
   .handler(async ({ data }) => {
-    const client = supabase as SupabaseClient<Database>;
+    const client = supabase as unknown as SupabaseClient;
     const { data: result, error } = await client.rpc("join_waitlist", {
       p_email: data.email,
       p_source_button: data.sourceButton,
@@ -82,7 +84,7 @@ export const getAllSignups = createServerFn({ method: "GET" })
     if (!roleRow) throw new Error("Forbidden");
 
     // Admin has SELECT policy on waitlist_signups, so the user's client works
-    const client = context.supabase as SupabaseClient<Database>;
+    const client = context.supabase as unknown as SupabaseClient;
     const { data, error } = await client
       .from("waitlist_signups")
       .select("id, email, tier, source_button, created_at")
